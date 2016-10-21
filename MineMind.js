@@ -2,7 +2,12 @@ var program = require('commander'); // for nice command line arg parsing
 var mineflayer = require('mineflayer');
 var mcdata = require('minecraft-data')(mineflayer.version);
 
+// more bot smarts
+var navigatePlugin = require('mineflayer-navigate')(mineflayer);
+var scaffoldPlugin = require('mineflayer-scaffold')(mineflayer);
+
 // behaviours
+var survival = require('./behaviours/survival.js');
 var trading = require('./behaviours/trading.js');
 
 program
@@ -34,11 +39,16 @@ bot.smartChat = function (message) {
 bot.echo = false;
 
 function ListCommands () {
-  console.log('Commands :\n' +
-    '  show villagers\n' +
-    '  show inventory\n' +
-    '  show trades <id>\n' +
-    '  trade <id> <trade> [<times>]');
+  bot.smartChat("Commands:");
+  let commands = [
+    "show villagers",
+    "show inventory",
+    "show trades <id>",
+    "trade <id> <trade> [<times>]"
+  ];
+  for(command of commands) {
+    bot.smartChat(" "+command);
+  }
 }
 
 function ReceivedMessage (username, message) {
@@ -47,11 +57,17 @@ function ReceivedMessage (username, message) {
     if(bot.echo) bot.smartChat(username+" sent -- " +message);
     var command = message.split(' ');
     switch(true) {
+      case 'help' === message:
+        ListCommands();
+        break;
       case 'enable echo' === message:
         bot.echo = true;
         break;
       case 'disable echo' === message:
         bot.echo = false;
+        break;
+      case 'show health' === message:
+        survival.ShowHealth();
         break;
       case 'show villagers' === message:
         trading.showVillagers();
