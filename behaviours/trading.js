@@ -1,8 +1,8 @@
 function trading() {
-  
+
 }
 
-trading.prototype.showVillagers = function () {
+trading.showVillagers = function () {
   var villagers = Object.keys(bot.entities).map(function (id) {
     return bot.entities[id];
   }).filter(function (e) {
@@ -13,92 +13,99 @@ trading.prototype.showVillagers = function () {
   }).map(function (e) {
     return e.id;
   });
-  bot.chat('found ' + villagers.length + ' villagers');
-  bot.chat('villager(s) you can trade with: ' + closeVillagersId.join(', '));
+  bot.smartChat('found ' + villagers.length + ' villagers');
+  bot.smartChat('villager(s) you can trade with: ' + closeVillagersId.join(', '));
 };
 
- trading.prototype.showInventory = function() {
-  bot.inventory.slots
-    .filter(function(item) {
-      return item;
-    }).forEach(function (item) {
-      bot.chat(stringifyItem(item));
+trading.showInventory = function() {
+  let items = bot.inventory.slots.filter(function(item) {
+    return item;
+  });
+  bot.smartChat("items: "+items.length);
+  if (items.length > 0) {
+    console.log(items);
+
+    items.forEach(function (item) {
+      bot.smartChat(stringifyItem(item));
     });
+  } else {
+    bot.smartChat("inventory was empty")
+  }
 };
 
- trading.prototype.showTrades = function(id) {
+trading.showTrades = function(id) {
   var e = bot.entities[id];
   switch (true) {
     case !e:
-      bot.chat('cant find entity with id ' + id);
-      break;
+    bot.smartChat('cant find entity with id ' + id);
+    break;
     case e.entityType !== 120:
-      bot.chat('entity is not a villager');
-      break;
+    bot.smartChat('entity is not a villager');
+    break;
     case bot.entity.position.distanceTo(e.position) > 3:
-      bot.chat('villager out of reach');
-      break;
+    bot.smartChat('villager out of reach');
+    break;
     default:
-      var villager = bot.openVillager(e);
-      villager.once('ready', function() {
+    var villager = bot.openVillager(e);
+    villager.once('ready', function() {
+      villager.close();
+      stringifyTrades(villager.trades).forEach(function (trade , i) {
+        bot.smartChat(i + 1 + ': ' + trade);
+      });
+    });
+  }
+};
+
+trading.trade = function(id, index, count) {
+  var e = bot.entities[id];
+  switch (true) {
+    case !e:
+    bot.smartChat('cant find entity with id ' + id);
+    break;
+    case e.entityType !== 120:
+    bot.smartChat('entity is not a villager');
+    break;
+    case bot.entity.position.distanceTo(e.position) > 3:
+    bot.smartChat('villager out of reach');
+    break;
+    default:
+    var villager = bot.openVillager(e);
+    villager.once('ready', function() {
+      var trade = villager.trades[index - 1];
+      count = count || trade.maxTradeuses - trade.tooluses;
+      switch (true) {
+        case !trade:
         villager.close();
-        stringifyTrades(villager.trades).forEach(function (trade , i) {
-          bot.chat(i + 1 + ': ' + trade);
+        bot.smartChat('trade not found');
+        break;
+        case trade.disabled:
+        villager.close();
+        bot.smartChat('trade is disabled');
+        break;
+        case trade.maxTradeuses - trade.tooluses < count:
+        villager.close();
+        bot.smartChat('cant trade that often');
+        break;
+        case !hasResources(villager.window, trade, count):
+        villager.close();
+        bot.smartChat('dont have the resources to do that trade');
+        break;
+        default:
+        bot.smartChat('starting to trade');
+        bot.trade(villager, index - 1, count, function(err) {
+          villager.close();
+          if (err) {
+            bot.smartChat('an error acured while tyring to trade');
+            console.log(err);
+          } else {
+            bot.smartChat('traded ' + count + ' times');
+          }
         });
-      });
-  }
-};
-
- trading.prototype.trade = function(id, index, count) {
-  var e = bot.entities[id];
-  switch (true) {
-    case !e:
-      bot.chat('cant find entity with id ' + id);
-      break;
-    case e.entityType !== 120:
-      bot.chat('entity is not a villager');
-      break;
-    case bot.entity.position.distanceTo(e.position) > 3:
-      bot.chat('villager out of reach');
-      break;
-    default:
-      var villager = bot.openVillager(e);
-      villager.once('ready', function() {
-        var trade = villager.trades[index - 1];
-        count = count || trade.maxTradeuses - trade.tooluses;
-        switch (true) {
-          case !trade:
-            villager.close();
-            bot.chat('trade not found');
-            break;
-          case trade.disabled:
-            villager.close();
-            bot.chat('trade is disabled');
-            break;
-          case trade.maxTradeuses - trade.tooluses < count:
-            villager.close();
-            bot.chat('cant trade that often');
-            break;
-          case !hasResources(villager.window, trade, count):
-            villager.close();
-            bot.chat('dont have the resources to do that trade');
-            break;
-          default:
-            bot.chat('starting to trade');
-            bot.trade(villager, index - 1, count, function(err) {
-              villager.close();
-              if (err) {
-                bot.chat('an error acured while tyring to trade');
-                console.log(err);
-              } else {
-                bot.chat('traded ' + count + ' times');
-              }
-            });
-        }
-      });
+      }
+    });
   }
 
-   trading.prototype.hasResources = function(window, trade, count) {
+  trading.hasResources = function(window, trade, count) {
     var first = enough(trade.firstInput, count);
     var second = !trade.hasSecondItem || enough(trade.secondaryInput, count);
     return first && second;
@@ -109,7 +116,7 @@ trading.prototype.showVillagers = function () {
   };
 };
 
- trading.prototype.stringifyTrades = function(trades) {
+trading.stringifyTrades = function(trades) {
   return trades.map(function (trade) {
     var text = stringifyItem(trade.firstInput);
     if (trade.secondaryInput) text += ' & ' + stringifyItem(trade.secondaryInput);
@@ -119,7 +126,7 @@ trading.prototype.showVillagers = function () {
   });
 };
 
-trading.prototype.stringifyItem = function(item) {
+function stringifyItem (item) {
   if (!item) return 'nothing';
   var text = item.count + ' ' + item.displayName;
   if (item.nbt && item.nbt.value) {
