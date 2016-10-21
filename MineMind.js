@@ -3,6 +3,7 @@ var mineflayer = require('mineflayer');
 var mcdata = require('minecraft-data')(mineflayer.version);
 
 // more bot smarts
+var blockfinderPlugin = require('mineflayer-blockfinder')(mineflayer);
 var navigatePlugin = require('mineflayer-navigate')(mineflayer);
 var scaffoldPlugin = require('mineflayer-scaffold')(mineflayer);
 
@@ -25,6 +26,16 @@ bot = mineflayer.createBot({
   password: program.password,
   verbose: true,
 });
+
+
+bot.on("login",function () {
+  console.log("bot logged in");
+});
+bot.on("kicked",function (reason, loggedIn) {
+  console.log("bot kicked for: "+reason);
+});
+// enable blockfinder
+blockfinderPlugin(bot);
 
 bot.owner = program.owner;
 
@@ -71,6 +82,9 @@ function ReceivedMessage (username, message) {
         break;
       case 'show villagers' === message:
         trading.showVillagers();
+        break;
+      case 'dig hole' === message:
+        survival.DigHole();
         break;
       case 'show inventory' === message:
         trading.showInventory();
