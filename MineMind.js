@@ -6,47 +6,38 @@ var mcdata = require('minecraft-data')(mineflayer.version);
 var trading = require('./behaviours/trading.js');
 
 program
-  .version('0.0.1')
-  .option('-a, --address [address of server]', 'specifiy server ip')
-  .option('-a, --address [address of server]', 'specifiy server ip')
-  .option('-o, --owner [name]', 'Set owner')
-  .option('-c, --cheese [type]', 'Add the specified type of cheese [marble]', 'marble')
+  .option('-h, --host [host]', 'specifiy server ip')
+  .option('-p, --port [port]', 'specifiy server port')
+  .option('-o, --owner [name]', 'set bot owner')
+  .option('-u, --username [name]', 'set username for bot to login with')
+  .option('-p, --password [password]', 'set password for bot to login with')
   .parse(process.argv);
 
-
-
-if(process.argv.length < 4 || process.argv.length > 6) {
-  console.log('Usage : node trader.js <host> <port> [<name>] [<password>]');
-  process.exit(1);
-}
-
-
-
-console.log('Commands :\n' +
-  '  show villagers\n' +
-  '  show inventory\n' +
-  '  show trades <id>\n' +
-  '  trade <id> <trade> [<times>]');
-
-var bot = mineflayer.createBot({
-  host: process.argv[2],
-  port: parseInt(process.argv[3]),
-  username: process.argv[4] ? process.argv[4] : 'trader',
-  password: process.argv[5],
+bot = mineflayer.createBot({
+  host: program.host,
+  port: parseInt(program.port),
+  username: program.username || "MineMindBot",
+  password: program.password,
   verbose: true,
 });
 
+bot.owner = program.owner;
 
-
-var is_public = false;
-
-bot.smartchat = function (message) {
-  if (is_public) {
-    bot.chat(message);
+bot.smartChat = function (message) {
+  if (bot.owner) {
+    bot.chat("/tell "+bot.owner+ " " + message);
   } else {
-    bot.chat("/tell "+owner+message)
+    bot.chat(message);
   }
 };
+
+function ListCommands () {
+  console.log('Commands :\n' +
+    '  show villagers\n' +
+    '  show inventory\n' +
+    '  show trades <id>\n' +
+    '  trade <id> <trade> [<times>]');
+}
 
 bot.on('chat', function(username, message) {
   if(username === bot.username) return; // ignores own messages
@@ -66,3 +57,5 @@ bot.on('chat', function(username, message) {
       break;
   }
 });
+
+exports.bot = bot;
