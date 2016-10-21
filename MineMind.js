@@ -31,6 +31,8 @@ bot.smartChat = function (message) {
   }
 };
 
+bot.echo = false;
+
 function ListCommands () {
   console.log('Commands :\n' +
     '  show villagers\n' +
@@ -39,23 +41,34 @@ function ListCommands () {
     '  trade <id> <trade> [<times>]');
 }
 
-bot.on('chat', function(username, message) {
-  if(username === bot.username) return; // ignores own messages
-  var command = message.split(' ');
-  switch(true) {
-    case 'show villagers' === message:
-      trading.showVillagers();
-      break;
-    case 'show inventory' === message:
-      trading.showInventory();
-      break;
-    case /^show trades [0-9]+$/.test(message):
-      trading.showTrades(command[2]);
-      break;
-    case /^trade [0-9]+ [0-9]+( [0-9]+)?$/.test(message):
-      trading.trade(command[1], command[2], command[3]);
-      break;
-  }
-});
+function ReceivedMessage (username, message) {
+    if(username === bot.username) return; // ignores own messages
+    if(bot.owner && bot.owner !== username) return; // if bot has an owner, ignore everyone else
+    if(bot.echo) bot.smartChat(username+" sent -- " +message);
+    var command = message.split(' ');
+    switch(true) {
+      case 'enable echo' === message:
+        bot.echo = true;
+        break;
+      case 'disable echo' === message:
+        bot.echo = false;
+        break;
+      case 'show villagers' === message:
+        trading.showVillagers();
+        break;
+      case 'show inventory' === message:
+        trading.showInventory();
+        break;
+      case /^show trades [0-9]+$/.test(message):
+        trading.showTrades(command[2]);
+        break;
+      case /^trade [0-9]+ [0-9]+( [0-9]+)?$/.test(message):
+        trading.trade(command[1], command[2], command[3]);
+        break;
+      }
+}
+
+bot.on('whisper',ReceivedMessage );
+bot.on('chat',ReceivedMessage );
 
 exports.bot = bot;
