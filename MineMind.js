@@ -71,7 +71,7 @@ bot.moveToTarget = function (targetEntity) {
     console.log(targetEntity);
 
     var path = bot.navigate.findPathSync(targetEntity.position, {
-        timeout: 1 * 1000,
+        timeout: 1000,
         endRadius: 2,
     });
     bot.navigate.walk(path.path, function() {

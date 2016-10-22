@@ -9,7 +9,7 @@ simple.following = false;
 simple.UpdateFollow = function () {
   if (simple.following === true) {
     bot.moveToTarget(bot.getOwnerEntity());
-    timeoutId = setTimeout(simple.UpdateFollow, 1000); // this keeps it following
+    timeoutId = setTimeout(simple.UpdateFollow, 2 * 1000); // this keeps it following
   }
 };
 
