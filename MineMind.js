@@ -34,8 +34,19 @@ bot.on("login",function () {
 bot.on("kicked",function (reason, loggedIn) {
   console.log("bot kicked for: "+reason);
 });
+
+bot.on("diggingCompleted", function (error) {
+  bot.smartChat("Digging completed "+ error);
+  console.log("Digging completed ");
+  console.log(error);
+});
+bot.on("diggingAborted", function (error) {
+  bot.smartChat("diggingAborted "+ error);
+  console.log("diggingAborted ");
+  console.log(error);
+});
 // enable blockfinder
-blockfinderPlugin(bot);
+//blockfinderPlugin(bot);
 
 bot.owner = program.owner;
 
@@ -79,6 +90,9 @@ function ReceivedMessage (username, message) {
         break;
       case 'show health' === message:
         survival.ShowHealth();
+        break;
+      case 'search enemies' === message:
+        survival.SearchEnemies();
         break;
       case 'show villagers' === message:
         trading.showVillagers();
