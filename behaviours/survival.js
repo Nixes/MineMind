@@ -14,8 +14,8 @@ let dirt_like = [
 ];
 
 
-let distance_close = 10;
-let distance_attack = 5; // the range at which the bot should attack mobs
+let distance_close = 10; // these are enemies which can be navigated around
+let distance_danger = 5; // the range at which the bot should attack mobs
 
 
 
@@ -36,16 +36,18 @@ survival.IsNight = function() {
 };
 
 survival.SearchEnemies = function () {
-  let distance = 10;
-
   let close_enemies = Object.keys(bot.entities).map(function (id) {
     return bot.entities[id];
   }).filter(function (e) {
-
-    return e.type === 'mob' && bot.entity.position.distanceTo(e.position) < distance;
+    return e.type === 'mob' && bot.entity.position.distanceTo(e.position) < distance_close;
   });
 
-  bot.smartChat('found ' + close_enemies.length + ' enemies');
+  let danger_enemies = close_enemies.filter(function (e) {
+      return bot.entity.position.distanceTo(e.position) < distance_danger;
+  });
+
+  bot.smartChat('found ' + close_enemies.length + ' close enemies');
+  bot.smartChat('found ' + danger_enemies.length + ' dangerously close enemies');
   //bot.smartChat(close_enemies_ids.join(', '));
   console.log(close_enemies);
 };
