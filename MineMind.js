@@ -63,12 +63,11 @@ bot.smartChat = function (message) {
   } else {
     bot.chat(message);
   }
+  console.log("Chat: "+ message);
 };
 
 bot.moveToTarget = function (targetEntity) {
     if (targetEntity == null) return;
-    console.log("Heading to location of ");
-    console.log(targetEntity);
 
     var path = bot.navigate.findPathSync(targetEntity.position, {
         timeout: 1000,
