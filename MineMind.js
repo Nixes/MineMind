@@ -27,6 +27,9 @@ bot = mineflayer.createBot({
   verbose: true,
 });
 
+// enable mineflayer extensions
+navigatePlugin(bot);
+//blockfinderPlugin(bot);
 
 bot.on("login",function () {
   console.log("bot logged in");
@@ -45,18 +48,17 @@ bot.on("diggingAborted", function (error) {
   console.log("diggingAborted ");
   console.log(error);
 });
-// enable blockfinder
-//blockfinderPlugin(bot);
 
 bot.owner = program.owner;
 
 bot.smartChat = function (message) {
   if (bot.owner) {
-    bot.chat("/tell "+bot.owner+ " " + message);
+    bot.whisper(bot.owner,message);
   } else {
     bot.chat(message);
   }
 };
+
 
 bot.echo = false;
 
