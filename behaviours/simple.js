@@ -8,6 +8,13 @@ simple.following = false;
 
 simple.following_last_distance = 0;
 
+bot.on('entityGone', function onGone(entity) {
+    if (entity.username !== bot.owner) return;
+
+    simple.following = false;
+});
+
+
 simple.UpdateFollow = function () {
   if (simple.following === true) {
     let owner_entity = bot.getOwnerEntity();
@@ -32,9 +39,18 @@ simple.Follow = function () {
   simple.UpdateFollow();
 };
 
+simple.ShowHealth = function() {
+  bot.smartChat("Health: "+bot.health);
+  bot.smartChat("Hunger: "+bot.food);
+};
+
 // drop entire inventory contents
 simple.DropAll = function () {
 
+}
+
+simple.DigUntilBroken = function (enity_to_break) {
+  bot.dig(dirt_location, DiggingStopped );
 }
 
 module.exports = simple;
