@@ -38,6 +38,9 @@ bot.on("login",function () {
 bot.on("kicked",function (reason, loggedIn) {
   console.log("bot kicked for: "+reason);
 });
+bot.on("death",function () {
+  console.log("bot was killed");
+});
 
 bot.on("diggingCompleted", function (error) {
   bot.smartChat("Digging completed "+ error);
@@ -74,10 +77,13 @@ bot.moveToTarget = function (targetEntity) {
         endRadius: 2,
     });
     bot.navigate.walk(path.path, function() {
-        if (targetEntity != null) {
+        if (targetEntity !== null) {
             //bot.lookAt(targetEntity.position.plus(vec3(0, 1.62, 0)));
         }
     });
+    if (path.status !== 'success') {
+      console.log("Pathing failed because: "+ path.status);
+    }
 }
 
 bot.echo = false;
