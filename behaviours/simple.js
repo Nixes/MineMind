@@ -1,4 +1,4 @@
-// these are simmple commands that basicly interface with the bot api directly
+// these are simmple commands that interface with the bot api directly
 
 function simple () {
 
@@ -14,8 +14,19 @@ simple.UpdateFollow = function () {
 };
 
 simple.Follow = function () {
-  simple.following = !simple.following;
+  if (simple.following === true) {
+    simple.following = false;
+    bot.smartChat("stopped following");
+  } else {
+    simple.following = true;
+    bot.smartChat("started following");
+  }
   simple.UpdateFollow();
+};
+
+// drop entire inventory contents
+simple.DropAll = function () {
+
 }
 
 module.exports = simple;
