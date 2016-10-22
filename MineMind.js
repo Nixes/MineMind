@@ -7,10 +7,6 @@ var blockfinderPlugin = require('mineflayer-blockfinder')(mineflayer);
 var navigatePlugin = require('mineflayer-navigate')(mineflayer);
 var scaffoldPlugin = require('mineflayer-scaffold')(mineflayer);
 
-// behaviours
-var survival = require('./behaviours/survival.js');
-var trading = require('./behaviours/trading.js');
-
 program
   .option('-h, --host [host]', 'specifiy server ip')
   .option('-p, --port [port]', 'specifiy server port')
@@ -26,6 +22,11 @@ bot = mineflayer.createBot({
   password: program.password,
   verbose: true,
 });
+
+// behaviours
+var survival = require('./behaviours/survival.js');
+var trading = require('./behaviours/trading.js');
+var simple = require('./behaviours/simple.js');
 
 // enable mineflayer extensions
 navigatePlugin(bot);
@@ -51,7 +52,7 @@ bot.on("diggingAborted", function (error) {
 
 bot.owner = program.owner;
 
-function getOwnerEntity () {
+bot.getOwnerEntity = function () {
   let owner = bot.players[bot.owner]
   return owner.entity;
 }
@@ -71,7 +72,7 @@ bot.moveToTarget = function (targetEntity) {
 
     var path = bot.navigate.findPathSync(targetEntity.position, {
         timeout: 1 * 1000,
-        endRadius: 4,
+        endRadius: 2,
     });
     bot.navigate.walk(path.path, function() {
         if (targetEntity != null) {
@@ -104,8 +105,8 @@ function ReceivedMessage (username, message) {
       case 'help' === message:
         ListCommands();
         break;
-      case 'come' === message:
-        bot.moveToTarget(getOwnerEntity());
+      case 'follow' === message:
+        simple.Follow();
         break;
       case 'enable echo' === message:
         bot.echo = true;
