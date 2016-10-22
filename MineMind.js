@@ -51,6 +51,11 @@ bot.on("diggingAborted", function (error) {
 
 bot.owner = program.owner;
 
+function getOwnerEntity () {
+  let owner = bot.players[bot.owner]
+  return owner.entity;
+}
+
 bot.smartChat = function (message) {
   if (bot.owner) {
     bot.whisper(bot.owner,message);
@@ -59,6 +64,21 @@ bot.smartChat = function (message) {
   }
 };
 
+bot.moveToTarget = function (targetEntity) {
+    if (targetEntity == null) return;
+    console.log("Heading to location of ");
+    console.log(targetEntity);
+
+    var path = bot.navigate.findPathSync(targetEntity.position, {
+        timeout: 1 * 1000,
+        endRadius: 4,
+    });
+    bot.navigate.walk(path.path, function() {
+        if (targetEntity != null) {
+            //bot.lookAt(targetEntity.position.plus(vec3(0, 1.62, 0)));
+        }
+    });
+}
 
 bot.echo = false;
 
@@ -83,6 +103,9 @@ function ReceivedMessage (username, message) {
     switch(true) {
       case 'help' === message:
         ListCommands();
+        break;
+      case 'come' === message:
+        bot.moveToTarget(getOwnerEntity());
         break;
       case 'enable echo' === message:
         bot.echo = true;
