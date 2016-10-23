@@ -122,7 +122,7 @@ function ReceivedMessage (username, message) {
       case 'show health' === message:
         survival.ShowHealth();
         break;
-      case 'search enemies' === message:
+      case 'survive' === message:
         survival.SearchEnemies();
         break;
       case 'show villagers' === message:
