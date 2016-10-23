@@ -14,7 +14,7 @@ let dirt_like = [
 ];
 
 
-let distance_close = 10; // these are enemies which can be navigated around
+let distance_close = 15; // these are enemies which can be navigated around
 let distance_danger = 5; // the range at which the bot should attack mobs
 
 let currently_attacking_id; // contains the id of the entity that is being attacked, null if not attacking
@@ -44,27 +44,31 @@ survival.IsNight = function() {
 };
 
 // attacks the enemy specified by currently_attacking_id
-survival.AttackEnemy = function (enemy) {
-    bot.moveToTarget(enemy); // move towards the enemy before attacking
-    bot.attack(enemy);
+survival.AttackTarget = function (target) {
+
+  if (target !== null) bot.attack(target);
+    //bot.moveToTarget(enemy); // move towards the enemy before attacking
 }
 
 // this when given a list of enemys, will choose the best one to focus on.
 // currently just attacks the closest
-survival.ChooseTarget = function (enemies) {
-  let closest_enemy;
+survival.ChooseTarget = function (targets) {
+  let closest_target;
   let shortest_distance;
-  for(enemy of enemies) {
-    let distance = bot.entity.position.distanceTo(enemy.position);
+  for(target of targets) {
+    let distance = bot.entity.position.distanceTo(target.position);
     if (distance < shortest_distance) {
       shortest_distance = distance;
-      closest_enemy = enemy;
+      closest_target = target;
     }
   }
-  survival.AttackEnemy(closest_enemy);
+  console.log("Chosen target");
+  console.log(closest_target);
+  survival.AttackTarget(closest_target);
 }
 
 survival.SearchEnemies = function () {
+  console.log("Searching for enemies")
   let close_enemies = Object.keys(bot.entities).map(function (id) {
     return bot.entities[id];
   }).filter(function (e) {
@@ -75,13 +79,19 @@ survival.SearchEnemies = function () {
       return bot.entity.position.distanceTo(e.position) < distance_danger;
   });
 
-  bot.smartChat('found ' + close_enemies.length + ' close enemies');
-  bot.smartChat('found ' + danger_enemies.length + ' dangerously close enemies');
+  console.log('  found ' + close_enemies.length + ' close enemies');
+  console.log('  found ' + danger_enemies.length + ' dangerously close enemies');
   //bot.smartChat(close_enemies_ids.join(', '));
-  console.log(close_enemies);
+  //console.log(close_enemies);
     if (danger_enemies.length > 0) {
       bot.smartChat("Dangerously close enemies found, attacking.");
       survival.ChooseTarget(danger_enemies);
+    }
+    if (close_enemies.length > 0) {
+      // if close enemies found then keep searching
+      setTimeout(survival.SearchEnemies, 500); // search again in half a second
+    } else {
+      setTimeout(survival.SearchEnemies, 5000); // search again in 5 seconds
     }
 };
 
