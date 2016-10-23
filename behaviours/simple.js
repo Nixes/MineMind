@@ -18,13 +18,17 @@ bot.on('entityGone', function onGone(entity) {
 simple.UpdateFollow = function () {
   if (simple.following === true) {
     let owner_entity = bot.getOwnerEntity();
-    bot.moveToTarget(owner_entity);
-    let distance = Math.round( bot.entity.position.distanceTo(owner_entity.position) );
-    if (distance != simple.following_last_distance) { // don't talk about current distance if it hasn't changed
-      bot.smartChat(distance+" blocks from owner");
-      simple.following_last_distance = distance;
+    if (owner_entity !== null) {
+      bot.moveToTarget(owner_entity);
+      let distance = Math.round( bot.entity.position.distanceTo(owner_entity.position) );
+      if (distance != simple.following_last_distance) { // don't talk about current distance if it hasn't changed
+        bot.smartChat(distance+" blocks from owner");
+        simple.following_last_distance = distance;
+      }
+      timeoutId = setTimeout(simple.UpdateFollow, 2000); // this keeps it following
+    } else {
+      bot.smartChat("Unable to follow, could not find owner");
     }
-    timeoutId = setTimeout(simple.UpdateFollow, 2000); // this keeps it following
   }
 };
 
