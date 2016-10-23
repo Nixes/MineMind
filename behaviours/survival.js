@@ -50,9 +50,18 @@ survival.AttackEnemy = function (enemy) {
 }
 
 // this when given a list of enemys, will choose the best one to focus on.
+// currently just attacks the closest
 survival.ChooseTarget = function (enemies) {
+  let closest_enemy;
+  let shortest_distance;
   for(enemy of enemies) {
+    let distance = bot.entity.position.distanceTo(enemy.position);
+    if (distance < shortest_distance) {
+      shortest_distance = distance;
+      closest_enemy = enemy;
+    }
   }
+  survival.AttackEnemy(closest_enemy);
 }
 
 survival.SearchEnemies = function () {
@@ -84,8 +93,7 @@ survival.CheckDanger = function() {
 
 survival.DigHole = function() {
   // find something dirt like
-  let dirt_location = bot.findBlock(
-    {
+  let dirt_location = bot.findBlock({
     point: bot.entity.position,
     matching: 3,
     maxDistance: 5
