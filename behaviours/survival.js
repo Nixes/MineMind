@@ -53,8 +53,10 @@ survival.AttackTarget = function (target) {
 // this when given a list of enemys, will choose the best one to focus on.
 // currently just attacks the closest
 survival.ChooseTarget = function (targets) {
-  let closest_target;
-  let shortest_distance;
+  console.log("Targets ("+targets.length+"):");
+  console.log(targets);
+  let closest_target = null;
+  let shortest_distance = 100;
   for(target of targets) {
     let distance = bot.entity.position.distanceTo(target.position);
     if (distance < shortest_distance) {
