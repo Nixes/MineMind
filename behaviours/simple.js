@@ -1,5 +1,7 @@
 // these are simmple commands that interface with the bot api directly
 
+var mineflayer = require('mineflayer');
+
 function simple () {
 
 }
@@ -20,6 +22,7 @@ simple.UpdateFollow = function () {
     let owner_entity = bot.getOwnerEntity();
     if (owner_entity !== null) {
       bot.moveToTarget(owner_entity);
+      bot.lookAt(owner_entity.position.plus(mineflayer.vec3(0, 1.62, 0)), true);
       let distance = Math.round( bot.entity.position.distanceTo(owner_entity.position) );
       if (distance != simple.following_last_distance) { // don't talk about current distance if it hasn't changed
         bot.smartChat(distance+" blocks from owner");
@@ -27,7 +30,8 @@ simple.UpdateFollow = function () {
       }
       timeoutId = setTimeout(simple.UpdateFollow, 2000); // this keeps it following
     } else {
-      bot.smartChat("Unable to follow, could not find owner");
+      bot.smartChat("Unable to follow, could not find owner, stopping");
+      simple.following === false;
     }
   }
 };
