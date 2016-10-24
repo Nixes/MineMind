@@ -18,7 +18,7 @@ let dirt_like = [
 ];
 
 
-let distance_close = 15; // the range at which awareness of enemies should improve
+let distance_close = 16; // the range at which awareness of enemies should improve
 let distance_danger = 5; // the range at which the bot should attack mobs
 
 
