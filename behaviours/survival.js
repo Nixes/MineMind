@@ -88,7 +88,7 @@ survival.ChooseTarget = function (targets) {
   let closest_target = bot.findClosestTarget(targets)
   console.log("Chosen target");
   console.log(closest_target);
-  if (closest_target.name === 'Skeleton') {
+  if (closest_target.name === 'Skeleton' || closest_target.name === 'Witch' ) {
     survival.RunAttackTarget(closest_target);
   } else {
     survival.AttackTarget(closest_target);
@@ -105,7 +105,7 @@ survival.SearchEnemies = function () {
 
   let danger_enemies = close_enemies.filter(function (e) {
       // add to danger list if normal mob and very close or close and skeleton
-      return bot.entity.position.distanceTo(e.position) < distance_danger || e.name === 'Skeleton';
+      return bot.entity.position.distanceTo(e.position) < distance_danger || e.name === 'Skeleton' || e.name === 'Witch';
   });
 
   console.log('  found ' + close_enemies.length + ' close enemies');
