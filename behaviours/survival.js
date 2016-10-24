@@ -5,6 +5,7 @@ that will protect the bot from dying every few minutes
   - Making holes for hiding.
   - Attacking enemies when they get too close
     - Some special behaviour for skeletons?
+    - Need to be able to determine line of sight
 
 */
 
@@ -26,6 +27,13 @@ function survival() {
 }
 
 survival.danger_level = 0;
+/*
+levels and meaning:
+ 1 - Just took damage but environment safe
+ 2 - Entered dark cave
+ 3 - Night time
+
+*/
 
 function DiggingStopped(error) {
   bot.smartChat("Digging interupted: "+error);
@@ -51,6 +59,11 @@ survival.IsNight = function() {
   }
 };
 
+// equip the best weapon in inventory to fight with
+survival.PickBestWeapon = function () {
+
+}
+
 survival.AttackTarget = function (target) {
   if (target !== null) {
     bot.lookAt(target.position.plus(mineflayer.vec3(0, 1.62 + 0.5, 0)), true); // look where we are swinging
@@ -72,15 +85,7 @@ survival.RunAttackTarget = function (target) {
 survival.ChooseTarget = function (targets) {
   console.log("Targets ("+targets.length+"):");
   console.log(targets);
-  let closest_target = null;
-  let shortest_distance = 100;
-  for(target of targets) {
-    let distance = bot.entity.position.distanceTo(target.position);
-    if (distance < shortest_distance) {
-      shortest_distance = distance;
-      closest_target = target;
-    }
-  }
+  let closest_target = bot.findClosestTarget(targets)
   console.log("Chosen target");
   console.log(closest_target);
   if (closest_target.name === 'Skeleton') {
@@ -113,16 +118,17 @@ survival.SearchEnemies = function () {
     }
     if (close_enemies.length > 0) {
       // if close enemies found then keep searching
-      setTimeout(survival.CheckDanger, 500); // search again in half a second
+      setTimeout(survival.CheckDanger, 300);
     } else {
       setTimeout(survival.CheckDanger, 5000); // search again in 5 seconds
     }
 };
 
 survival.CheckDanger = function() {
-  if( survival.IsNight() ) {
-    survival.SearchEnemies();
+  if( survival.IsNight() && survival.danger_level < 3 ) {
+      survival.danger_level = 3;
   }
+  survival.SearchEnemies();
 }
 
 survival.DigHole = function() {

@@ -69,6 +69,19 @@ bot.smartChat = function (message) {
   console.log("Chat: "+ message);
 };
 
+bot.findClosestTarget = function(targets) {
+  let closest_target = null;
+  let shortest_distance = 100;
+  for(target of targets) {
+    let distance = bot.entity.position.distanceTo(target.position);
+    if (distance < shortest_distance) {
+      shortest_distance = distance;
+      closest_target = target;
+    }
+  }
+  return closest_target;
+}
+
 bot.moveToTarget = function (targetEntity) {
     if (targetEntity == null) return;
 
@@ -84,6 +97,12 @@ bot.moveToTarget = function (targetEntity) {
     if (path.status !== 'success') {
       console.log("Pathing failed because: "+ path.status);
     }
+}
+
+// this function tries to determine if an object is visible to the bot
+// use some sort of raymarching alg
+bot.testVisible = function (entity) {
+
 }
 
 bot.echo = false;
