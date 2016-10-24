@@ -1,6 +1,8 @@
+var replSrv = require('repl').start({ useGlobal: false }); // allow chrome console like interactivity
 var program = require('commander'); // for nice command line arg parsing
 var mineflayer = require('mineflayer');
 var mcdata = require('minecraft-data')(mineflayer.version);
+
 
 // more bot smarts
 var blockfinderPlugin = require('mineflayer-blockfinder')(mineflayer);
@@ -8,11 +10,11 @@ var navigatePlugin = require('mineflayer-navigate')(mineflayer);
 var scaffoldPlugin = require('mineflayer-scaffold')(mineflayer);
 
 program
-  .option('-h, --host [host]', 'specifiy server ip')
-  .option('-p, --port [port]', 'specifiy server port')
+  .option('-h, --host [host]', 'specifiy server ip, default: localhost')
+  .option('-p, --port [port]', 'specifiy server port, default: 25565')
   .option('-o, --owner [name]', 'set bot owner')
-  .option('-u, --username [name]', 'set username for bot to login with')
-  .option('-p, --password [password]', 'set password for bot to login with')
+  .option('-u, --username [name]', 'set username for bot to login with, default: MineMindBot')
+  .option('-p, --password [password]', 'set password for bot to login with, optional with offline server')
   .parse(process.argv);
 
 bot = mineflayer.createBot({
@@ -26,7 +28,12 @@ bot = mineflayer.createBot({
 // behaviours
 var survival = require('./behaviours/survival.js');
 var trading = require('./behaviours/trading.js');
+var gathering = require('./behaviours/gathering.js');
 var simple = require('./behaviours/simple.js');
+
+replSrv.context.bot = bot;
+replSrv.context.survival = survival;
+replSrv.context.gathering = gathering;
 
 // enable mineflayer extensions
 navigatePlugin(bot);
@@ -153,6 +160,12 @@ function ReceivedMessage (username, message) {
       case 'show inventory' === message:
         trading.showInventory();
         break;
+      case 'gather wood' === message:
+        gathering.Find();
+        break;
+      /*case /^gather [a-z]+$/.test(message):
+        gathering.Find(1,command[2]);
+        break;*/
       case /^show trades [0-9]+$/.test(message):
         trading.showTrades(command[2]);
         break;
@@ -164,5 +177,4 @@ function ReceivedMessage (username, message) {
 
 bot.on('whisper',ReceivedMessage );
 bot.on('chat',ReceivedMessage );
-
 exports.bot = bot;
