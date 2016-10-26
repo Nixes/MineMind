@@ -23,6 +23,10 @@ gathering.GetWood = function(number, closest_wood) {
   }
 };
 
+function BlockFound(thing) {
+  bot.smartChat("Really found a block");
+  console.log(thing);
+}
 
 gathering.Find = function () {
   let block_name = "wood";
@@ -34,26 +38,12 @@ gathering.Find = function () {
     return e.name === block_name && bot.entity.position.distanceTo(e.position) < max_search_distance;
   });*/
 
-  bot.findBlock({
-            point: bot.entity.position,
-            matching: 17, // oak wood
-            maxDistance: 256,
-        }, function(err, blockPoints) {
-          console.log("Findblock callback ran");
-            if (err) {
-                console.err(err);
-                console.log("I couldn't find any " + block_name+ ' near you, ' + username + '.');
-                return;
-            }
-
-            if (blockPoints.length) {
-                var foundBlock = blockPoints[0];
-                console.log('The closest ' + foundBlock.displayName + ' is at ' + endPos + ', ' + distance + ' blocks away.');
-            } else {
-                console.log("I couldn't find any " + block_name + ' near you, ' + username + '.');
-            }
-        });
-
+  let found_block = bot.findBlock({
+    point: bot.entity.position,
+    matching: 17, // 17 oak wood
+  });
+    console.log("Found:");
+    console.log(found_block);
 
 
   /*let closest_target = bot.findClosestTarget(search_matches);
