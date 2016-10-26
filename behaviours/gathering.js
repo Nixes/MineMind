@@ -13,9 +13,17 @@ function gathering () {
 
 let max_search_distance = 30;
 
+
+/* trees may be surrounded by leaves only one block above dirt, these need to be cleared
+ before mining can commence */
+gathering.ClearLeaves = function () {
+
+}
+
 gathering.GetWood = function(target_wood) {
   console.log("Found wood");
   // see if block below is also wood
+
   let block_below = bot.blockAt(target_wood.position.plus(mineflayer.vec3(0, -1, 0)));
   if (block_below !== null && block_below.material === 'wood') {
     console.log("Found wood block below target");
