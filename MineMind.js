@@ -161,7 +161,7 @@ function ReceivedMessage (username, message) {
         trading.showInventory();
         break;
       case 'gather wood' === message:
-        gathering.Find();
+        gathering.Find(17);
         break;
       /*case /^gather [a-z]+$/.test(message):
         gathering.Find(1,command[2]);
