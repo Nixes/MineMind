@@ -13,37 +13,51 @@ function gathering () {
 
 let max_search_distance = 30;
 
-gathering.GetWood = function(number, closest_wood) {
-  console.log("Closest wood");
-  console.log(closest_wood);
+gathering.GetWood = function(target_wood) {
+  console.log("Found wood");
   // see if block below is also wood
-  let block_below = bot.blockAt(closest_wood.position.plus(mineflayer.vec3(0, -1, 0)));
-  if (block_below !== null && block_below.name === 'wood') {
+  let block_below = bot.blockAt(target_wood.position.plus(mineflayer.vec3(0, -1, 0)));
+  if (block_below !== null && block_below.material === 'wood') {
     console.log("Found wood block below target");
   }
 };
 
-function BlockFound(thing) {
-  bot.smartChat("Really found a block");
-  console.log(thing);
+gathering.GetBlock = function() {
+
 }
 
-gathering.Find = function () {
-  let block_name = "wood";
+gathering.Find = function (item_id) {
 //  if (block_name === null) return;
-  console.log("Search for "+ block_name);
+  console.log("Search for id: "+ item_id);
   /*let search_matches = Object.keys(bot.blocks).map(function (id) {
     return bot.blocks[id];
   }).filter(function (e) {
     return e.name === block_name && bot.entity.position.distanceTo(e.position) < max_search_distance;
   });*/
 
-  let found_block = bot.findBlock({
-    point: bot.entity.position,
-    matching: 17, // 17 oak wood
-  });
-    console.log("Found:");
-    console.log(found_block);
+bot.findBlock({
+            point: bot.entity.position,
+            matching: item_id, // 17 oak wood
+            maxDistance: 256,
+            count: 1,
+        }, function(err, blockPoints) {
+          console.log("Findblock callback ran");
+            if (err) {
+                console.err(err);
+                console.log("I couldn't find any " + item_id);
+                return;
+            }
+
+            if (blockPoints.length) {
+                var foundBlock = blockPoints[0];
+                if(foundBlock.material === "wood") {
+                  gathering.GetWood(foundBlock);
+                }
+            } else {
+                console.log("I couldn't find any " + item_id);
+            }
+        }
+    );
 
 
   /*let closest_target = bot.findClosestTarget(search_matches);

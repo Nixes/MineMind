@@ -37,7 +37,7 @@ replSrv.context.gathering = gathering;
 
 // enable mineflayer extensions
 navigatePlugin(bot);
-//blockfinderPlugin(bot);
+blockfinderPlugin(bot);
 
 bot.on("login",function () {
   console.log("bot logged in");
