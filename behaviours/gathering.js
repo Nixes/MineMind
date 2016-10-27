@@ -20,8 +20,40 @@ gathering.ClearLeaves = function () {
 
 }
 
+// does a 2d search on adjacent blocks
+gathering.SeachAdjacentFlat = function (block_search_around,block_id_search) {
+  let blocks_seach = new Array(8);
+  blocks_seach[0] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(1, 0, 0)); // front
+  blocks_seach[1] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(-1, 0, 0)); // behind
+  blocks_seach[2] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(0, 0, 1)); // left
+  blocks_seach[3] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(0, 0, -1)); // right
+  blocks_seach[4] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(1, 0, 1)); // left front
+  blocks_seach[5] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(1, 0, -1)); // right front
+  blocks_seach[6] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(-1, 0, 1)); // left back
+  blocks_seach[7] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(-1, 0, -1)); // right back
+
+  for (block of blocks) {
+    if (block.type === block_id_search) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/* this function scans the length of the tree to try and find the
+base (where the tree meets the air) */
+gathering.FindTreeBase = function (tree_bottom, tree_top) {
+  // scans bottom up
+  let tree_length = (tree_top.position.y - tree_bottom.position.y) + 1; // the tree count should include the original wood block;
+  console.log("Tree length was: " + tree_length);
+  for (let i = 0; i < tree_length; i++) {
+    let block_search_around = tree_bottom.position.plus(mineflayer.vec3(0, i, 0));
+    gathering.SeachAdjacentFlat(block_search_around,0); // id:0 is air
+    console.log("Testing level: "+i);
+  }
+}
+
 gathering.GetWood = function(target_wood) {
-  console.log("Found wood");
   let tree_bottom = target_wood;
   let tree_top = target_wood;
 
@@ -55,6 +87,7 @@ gathering.GetWood = function(target_wood) {
   // the part of the tree that we can reach will be surrouned by air blocks
   console.log("Bottom of tree: " + tree_bottom.position);
   console.log("Top of tree: " + tree_top.position);
+  gathering.FindTreeBase(tree_bottom,tree_top);
 };
 
 gathering.GetBlock = function() {
