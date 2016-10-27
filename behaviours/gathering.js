@@ -22,19 +22,19 @@ gathering.ClearLeaves = function () {
 
 gathering.GetWood = function(target_wood) {
   console.log("Found wood");
-  let coords_tree_starts;
-  let coords_tree_ends;
+  let tree_bottom = target_wood;
+  let tree_top = target_wood;
 
 
   // find how deep the tree goes
   let pos_to_test = target_wood.position.plus(mineflayer.vec3(0, -1, 0));
   let is_block_below = true;
   while (is_block_below) {
-    pos_to_test = pos_to_test.position.plus(mineflayer.vec3(0, -1, 0));
+    pos_to_test = pos_to_test.plus(mineflayer.vec3(0, -1, 0));
     let block_below = bot.blockAt(pos_to_test);
     if (block_below !== null && block_below.material === 'wood') {
       console.log("Found wood block below target");
-      is_block_below = true;
+      tree_bottom = block_below;
     } else {
       is_block_below = false;
     }
@@ -43,16 +43,18 @@ gathering.GetWood = function(target_wood) {
   pos_to_test = target_wood.position.plus(mineflayer.vec3(0, -1, 0));
   let is_block_above = true;
   while (is_block_above) {
-    pos_to_test = pos_to_test.position.plus(mineflayer.vec3(0, 1, 0));
+    pos_to_test = pos_to_test.plus(mineflayer.vec3(0, 1, 0));
     let block_above = bot.blockAt(pos_to_test);
     if (block_above !== null && block_above.material === 'wood') {
       console.log("Found wood block above target");
-      is_block_above = true;
+      tree_top = block_above;
     } else {
       is_block_above = false;
     }
   }
   // the part of the tree that we can reach will be surrouned by air blocks
+  console.log("Bottom of tree: " + tree_bottom.position);
+  console.log("Top of tree: " + tree_top.position);
 };
 
 gathering.GetBlock = function() {
