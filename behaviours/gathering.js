@@ -29,8 +29,8 @@ gathering.SeachAdjacentFlat = function (block_search_around,block_id_search) {
   blocks_seach[3] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(0, 0, -1)); // right
   blocks_seach[4] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(1, 0, 1)); // left front
   blocks_seach[5] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(1, 0, -1)); // right front
-  blocks_seach[6] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(-1, 0, 1)); // left back
-  blocks_seach[7] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(-1, 0, -1)); // right back
+  blocks_seach[6] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(-1, 0, 1)); // left behind
+  blocks_seach[7] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(-1, 0, -1)); // right behind
 
   for (block of blocks) {
     if (block.type === block_id_search) {
