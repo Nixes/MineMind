@@ -18,19 +18,19 @@ let max_search_distance = 30;
  before mining can commence */
 gathering.ClearLeaves = function () {
 
-}
+};
 
 // does a 2d search on adjacent blocks
 gathering.SeachAdjacentFlat = function (block_search_around,block_id_search) {
   let blocks_seach = new Array(8);
-  blocks_seach[0] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(1, 0, 0)); // front
-  blocks_seach[1] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(-1, 0, 0)); // behind
-  blocks_seach[2] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(0, 0, 1)); // left
-  blocks_seach[3] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(0, 0, -1)); // right
-  blocks_seach[4] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(1, 0, 1)); // left front
-  blocks_seach[5] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(1, 0, -1)); // right front
-  blocks_seach[6] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(-1, 0, 1)); // left behind
-  blocks_seach[7] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(-1, 0, -1)); // right behind
+  blocks_seach[0] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(1, 0, 0))); // front
+  blocks_seach[1] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(-1, 0, 0))); // behind
+  blocks_seach[2] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(0, 0, 1))); // left
+  blocks_seach[3] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(0, 0, -1))); // right
+  blocks_seach[4] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(1, 0, 1))); // left front
+  blocks_seach[5] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(1, 0, -1))); // right front
+  blocks_seach[6] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(-1, 0, 1))); // left behind
+  blocks_seach[7] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(-1, 0, -1))); // right behind
 
   for (block of blocks) {
     if (block.type === block_id_search) {
