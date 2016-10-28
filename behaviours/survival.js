@@ -6,6 +6,7 @@ that will protect the bot from dying every few minutes
   - Attacking enemies when they get too close
     - Some special behaviour for skeletons?
     - Need to be able to determine line of sight
+    - Dodging patterns?
 
 */
 
@@ -49,7 +50,7 @@ function DiggingStopped(error) {
 
 survival.UpdateDangerLevel = function () {
 
-}
+};
 
 survival.IsNight = function() {
   if (bot.time.day > 12000) {
@@ -62,7 +63,7 @@ survival.IsNight = function() {
 // equip the best weapon in inventory to fight with
 survival.PickBestWeapon = function () {
 
-}
+};
 
 survival.AttackTarget = function (target) {
   if (target !== null) {
@@ -70,7 +71,7 @@ survival.AttackTarget = function (target) {
     //bot.moveToTarget(enemy); // move towards the enemy before attacking
     bot.attack(target);
   }
-}
+};
 
 survival.RunAttackTarget = function (target) {
   if (target !== null) {
@@ -78,14 +79,14 @@ survival.RunAttackTarget = function (target) {
     bot.lookAt(target.position.plus(mineflayer.vec3(0, 1.62 + 0.5, 0)), true); // look where we are swinging
     bot.attack(target);
   }
-}
+};
 
 // this when given a list of enemys, will choose the best one to focus on.
 // currently just attacks the closest
 survival.ChooseTarget = function (targets) {
   console.log("Targets ("+targets.length+"):");
   console.log(targets);
-  let closest_target = bot.findClosestTarget(targets)
+  let closest_target = bot.findClosestTarget(targets);
   console.log("Chosen target");
   console.log(closest_target);
   if (closest_target.name === 'Skeleton' || closest_target.name === 'Witch' ) {
@@ -93,10 +94,10 @@ survival.ChooseTarget = function (targets) {
   } else {
     survival.AttackTarget(closest_target);
   }
-}
+};
 
 survival.SearchEnemies = function () {
-  console.log("Searching for enemies")
+  console.log("Searching for enemies");
   let close_enemies = Object.keys(bot.entities).map(function (id) {
     return bot.entities[id];
   }).filter(function (e) {
@@ -129,7 +130,7 @@ survival.CheckDanger = function() {
       survival.danger_level = 3;
   }
   survival.SearchEnemies();
-}
+};
 
 survival.DigHole = function() {
   // find something dirt like
