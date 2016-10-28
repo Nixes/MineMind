@@ -63,9 +63,9 @@ bot.on("diggingAborted", function (error) {
 bot.owner = program.owner;
 
 bot.getOwnerEntity = function () {
-  let owner = bot.players[bot.owner]
+  let owner = bot.players[bot.owner];
   return owner.entity;
-}
+};
 
 bot.smartChat = function (message) {
   if (bot.owner) {
@@ -79,7 +79,7 @@ bot.smartChat = function (message) {
 bot.findClosestTarget = function(targets) {
   let closest_target = null;
   let shortest_distance = 100;
-  for(target of targets) {
+  for(let target of targets) {
     let distance = bot.entity.position.distanceTo(target.position);
     if (distance < shortest_distance) {
       shortest_distance = distance;
@@ -87,10 +87,10 @@ bot.findClosestTarget = function(targets) {
     }
   }
   return closest_target;
-}
+};
 
 bot.moveToTarget = function (targetEntity) {
-    if (targetEntity == null) return;
+    if (targetEntity === null) return;
 
     var path = bot.navigate.findPathSync(targetEntity.position, {
         timeout: 1000,
@@ -104,13 +104,13 @@ bot.moveToTarget = function (targetEntity) {
     if (path.status !== 'success') {
       console.log("Pathing failed because: "+ path.status);
     }
-}
+};
 
 // this function tries to determine if an object is visible to the bot
 // use some sort of raymarching alg
 bot.testVisible = function (entity) {
 
-}
+};
 
 bot.echo = false;
 
@@ -122,7 +122,7 @@ function ListCommands () {
     "show trades <id>",
     "trade <id> <trade> [<times>]"
   ];
-  for(command of commands) {
+  for(let command of commands) {
     bot.smartChat(" "+command);
   }
 }

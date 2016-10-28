@@ -32,13 +32,13 @@ gathering.SeachAdjacentFlat = function (block_search_around,block_id_search) {
   blocks_seach[6] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(-1, 0, 1))); // left behind
   blocks_seach[7] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(-1, 0, -1))); // right behind
 
-  for (block of blocks) {
+  for (let block of blocks) {
     if (block.type === block_id_search) {
       return true;
     }
   }
   return false;
-}
+};
 
 /* this function scans the length of the tree to try and find the
 base (where the tree meets the air) */
@@ -51,7 +51,7 @@ gathering.FindTreeBase = function (tree_bottom, tree_top) {
     gathering.SeachAdjacentFlat(block_search_around,0); // id:0 is air
     console.log("Testing level: "+i);
   }
-}
+};
 
 gathering.GetWood = function(target_wood) {
   let tree_bottom = target_wood;
@@ -92,7 +92,7 @@ gathering.GetWood = function(target_wood) {
 
 gathering.GetBlock = function() {
 
-}
+};
 
 gathering.Find = function (item_id) {
   if (item_id === null) return;
