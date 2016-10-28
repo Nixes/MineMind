@@ -15,14 +15,18 @@ let max_search_distance = 30;
 
 let current_target;
 
+// the wood blocks of the tree being broken down
+let wood_blocks;
+
 
 
 function MovementCallback(stopreason) { // provide a defualt callback
-  console.log("stopreason was: " + stopreason)
+  console.log("stopreason was: " + stopreason);
   if (stopreason === "arrived") {
-      console.log("Bot finished moving to resource");
+      console.log("Bot finished moving to resource, starting to to dig it.");
+      bot.dig(current_target, onDiggingCompleted);
   }
-};
+}
 
 
 /* trees may be surrounded by leaves only one block above dirt, these need to be cleared
@@ -105,7 +109,7 @@ gathering.GetWood = function(target_wood) {
   current_target = tree_base;
   bot.moveToTarget(current_target,MovementCallback);
   // start digging after we get there
-  // bot.dig(tree_base, onDiggingCompleted);
+  // bot.dig(current_target, onDiggingCompleted);
 };
 
 function onDiggingCompleted(err) {
