@@ -90,8 +90,10 @@ gathering.GetWood = function(target_wood) {
   // the part of the tree that we can reach will be surrouned by air blocks
   console.log("Bottom of tree: " + tree_bottom.position);
   console.log("Top of tree: " + tree_top.position);
-  let tree_base = gathering.FindTreeBase(tree_bottom,tree_top);
-  bot.dig(tree_base, onDiggingCompleted);
+  tree_base = gathering.FindTreeBase(tree_bottom,tree_top);
+  bot.moveToTarget(tree_base);
+  // start digging after we get there
+  // bot.dig(tree_base, onDiggingCompleted);
 };
 
 function onDiggingCompleted(err) {
@@ -99,7 +101,7 @@ function onDiggingCompleted(err) {
     console.log(err.stack);
     return;
   }
-  bot.chat("finished digging " + target.name);
+  console.log("finished digging " + tree_base.name);
 }
 
 gathering.GetBlock = function() {
