@@ -89,18 +89,21 @@ bot.findClosestTarget = function(targets) {
   return closest_target;
 };
 
-bot.moveToTarget = function (targetEntity) {
+bot.moveToTarget = function (targetEntity,callback) {
     if (targetEntity === null) return;
 
     var path = bot.navigate.findPathSync(targetEntity.position, {
         timeout: 1000,
         endRadius: 2,
     });
-    bot.navigate.walk(path.path, function() {
-        if (targetEntity !== null) {
-            //bot.lookAt(targetEntity.position.plus(vec3(0, 1.62, 0)));
-        }
-    });
+    if (callback === undefined) {
+        callback = function() { // provide a defualt callback
+            if (targetEntity !== null) {
+                //console.log("Finished moving");
+            }
+        };
+    }
+    bot.navigate.walk(path.path, callback);
     if (path.status !== 'success') {
       console.log("Pathing failed because: "+ path.status);
     }
