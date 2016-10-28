@@ -48,7 +48,9 @@ gathering.FindTreeBase = function (tree_bottom, tree_top) {
   console.log("Tree length was: " + tree_length);
   for (let i = 0; i < tree_length; i++) {
     let block_search_around = tree_bottom.position.plus(mineflayer.vec3(0, i, 0));
-    gathering.SeachAdjacentFlat(block_search_around,0); // id:0 is air
+    if (gathering.SeachAdjacentFlat(block_search_around,0) ) {
+      return block_search_around;
+    }
     console.log("Testing level: "+i);
   }
 };
