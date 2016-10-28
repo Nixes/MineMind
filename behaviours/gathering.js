@@ -13,6 +13,17 @@ function gathering () {
 
 let max_search_distance = 30;
 
+let current_target;
+
+
+
+function MovementCallback(stopreason) { // provide a defualt callback
+  console.log("stopreason was: " + stopreason)
+  if (stopreason === "arrived") {
+      console.log("Bot finished moving to resource");
+  }
+};
+
 
 /* trees may be surrounded by leaves only one block above dirt, these need to be cleared
  before mining can commence */
@@ -91,7 +102,8 @@ gathering.GetWood = function(target_wood) {
   console.log("Bottom of tree: " + tree_bottom.position);
   console.log("Top of tree: " + tree_top.position);
   tree_base = gathering.FindTreeBase(tree_bottom,tree_top);
-  bot.moveToTarget(tree_base);
+  current_target = tree_base;
+  bot.moveToTarget(current_target,MovementCallback);
   // start digging after we get there
   // bot.dig(tree_base, onDiggingCompleted);
 };
