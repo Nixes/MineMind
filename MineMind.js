@@ -89,6 +89,9 @@ bot.findClosestTarget = function(targets) {
   return closest_target;
 };
 
+// a function to test if the bot is close enough to interact with the block
+bot.canReach = function(block) {}
+
 bot.moveToTarget = function (targetEntity,callback) {
     if (targetEntity === null) return;
 
