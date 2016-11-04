@@ -16,7 +16,7 @@ let max_search_distance = 30;
 let current_target;
 
 // the wood blocks of the tree being broken down
-let wood_blocks;
+gathering.wood_blocks = new Array();
 
 
 
@@ -66,12 +66,15 @@ gathering.FindTreeBase = function (tree_bottom, tree_top) {
     let block_search_around = bot.blockAt( tree_bottom.position.plus(mineflayer.vec3(0, i, 0)) );
     if (gathering.SeachAdjacentFlat(block_search_around,0) ) {
       return block_search_around;
+    } else {
+      console.log("Bot was unable to find the tree base.");
     }
     console.log("Testing level: "+i);
   }
 };
 
 gathering.GetWood = function(target_wood) {
+  gathering.wood_blocks.length = 0; // clear array
   let tree_bottom = target_wood;
   let tree_top = target_wood;
 
@@ -85,10 +88,12 @@ gathering.GetWood = function(target_wood) {
     if (block_below !== null && block_below.material === 'wood') {
       console.log("Found wood block below target");
       tree_bottom = block_below;
+      gathering.wood_blocks.push(block_below);
     } else {
       is_block_below = false;
     }
   }
+  gathering.wood_blocks.push(target_wood);
   // find out how high the tree goes
   pos_to_test = target_wood.position.plus(mineflayer.vec3(0, -1, 0));
   let is_block_above = true;
@@ -98,6 +103,7 @@ gathering.GetWood = function(target_wood) {
     if (block_above !== null && block_above.material === 'wood') {
       console.log("Found wood block above target");
       tree_top = block_above;
+      gathering.wood_blocks.push(block_above);
     } else {
       is_block_above = false;
     }
