@@ -18,6 +18,8 @@ let current_target;
 // the wood blocks of the tree being broken down
 gathering.wood_blocks = new Array();
 
+// list of items to collect
+gathering.item_que = new Array();
 
 
 function MovementCallback(stopreason) { // provide a defualt callback
@@ -28,6 +30,10 @@ function MovementCallback(stopreason) { // provide a defualt callback
   }
 }
 
+// go to and collect all of item type id within range
+gathering.PickUpItem = function(item_id) {
+
+};
 
 /* trees may be surrounded by leaves only one block above dirt, these need to be cleared
  before mining can commence */
