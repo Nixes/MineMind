@@ -18,7 +18,7 @@ let current_target;
 // the wood blocks of the tree being broken down
 gathering.wood_blocks = new Array();
 
-// list of items to collect, each item consits of an [id,quantity]
+// list of items to collect, each item consists of an [{id,amount}]
 gathering.item_que = new Array();
 
 // when the bot picks up an item, talk about it
@@ -178,5 +178,32 @@ gathering.Find = function (item_id) {
     }
   });
 };
+
+function ItemSearchTick() {
+  // if item que empty, don't bother
+  if (item_que.length < 1) return;
+
+
+  setTimeout(ItemSearchTick, 5000); // search again every 5 seconds
+}
+
+gathering.AddQue = function (item_id,item_amount) {
+  // the defualt amound when not specified is one
+  if (item_amount === undefined) {
+      item_amount = 1;
+  }
+
+  // check to see if item is already in the list
+  for (let item of gathering.item_que) {
+    // if it is add the newly requested amount to the existing number
+    if (item.id == item_id) {
+      item.amount += item_amount;
+      return;
+    }
+  }
+  // if not add it to the que
+  gathering.item_que.push({id:item_id, amount:item_amount}) ;
+};
+
 
 module.exports = gathering;
