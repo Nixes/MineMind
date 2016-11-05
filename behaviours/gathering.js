@@ -46,7 +46,7 @@ function DiggingMovementCallback(stopreason) { // provide a defualt callback
   }
 }
 
-gethering.PickupNearby = function () {
+gathering.PickupNearby = function () {
   bot.moveToTarget(current_target,PickupMovementCallback);
 };
 
