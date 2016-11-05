@@ -18,11 +18,27 @@ let current_target;
 // the wood blocks of the tree being broken down
 gathering.wood_blocks = new Array();
 
-// list of items to collect
+// list of items to collect, each item consits of an [id,quantity]
 gathering.item_que = new Array();
 
+// when the bot picks up an item, talk about it
+bot.on("playerCollect",function (collector, collected) {
+  if (collector == bot.entity) {
+    console.log("The bot picked up an item, it was: ");
+    console.log(collected);
+    // check if item was in the item que,
+  }
+});
 
-function MovementCallback(stopreason) { // provide a defualt callback
+function PickupMovementCallback(stopreason) { // provide a defualt callback
+  console.log("stopreason was: " + stopreason);
+  if (stopreason === "arrived") {
+      console.log("Bot finished moving to resource, starting to to dig it.");
+      gathering.PickupNearby();
+  }
+}
+
+function DiggingMovementCallback(stopreason) { // provide a defualt callback
   console.log("stopreason was: " + stopreason);
   if (stopreason === "arrived") {
       console.log("Bot finished moving to resource, starting to to dig it.");
@@ -30,9 +46,8 @@ function MovementCallback(stopreason) { // provide a defualt callback
   }
 }
 
-// go to and collect all of item type id within range
-gathering.PickUpItem = function(item_id) {
-
+gethering.PickupNearby = function () {
+  bot.moveToTarget(current_target,PickupMovementCallback);
 };
 
 /* trees may be surrounded by leaves only one block above dirt, these need to be cleared
@@ -119,7 +134,7 @@ gathering.GetWood = function(target_wood) {
   console.log("Top of tree: " + tree_top.position);
   tree_base = gathering.FindTreeBase(tree_bottom,tree_top);
   current_target = tree_base;
-  bot.moveToTarget(current_target,MovementCallback);
+  bot.moveToTarget(current_target,DiggingMovementCallback);
   // start digging after we get there
   // bot.dig(current_target, onDiggingCompleted);
 };
