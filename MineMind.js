@@ -52,14 +52,10 @@ bot.on("death",function () {
 });
 
 bot.on("diggingCompleted", function (error) {
-  bot.smartChat("Digging completed "+ error);
-  console.log("Digging completed ");
-  console.log(error);
+  bot.smartChat("diggingCompleted, error "+ error);
 });
 bot.on("diggingAborted", function (error) {
-  bot.smartChat("diggingAborted "+ error);
-  console.log("diggingAborted ");
-  console.log(error);
+  bot.smartChat("diggingAborted, error "+ error);
 });
 
 bot.owner = program.owner;
