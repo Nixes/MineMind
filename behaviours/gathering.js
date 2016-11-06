@@ -30,7 +30,7 @@ bot.on("playerCollect",function (collector, collected) {
   }
 });
 
-function PickupMovementCallback(stopreason) { // provide a defualt callback
+function PickupMovementCallback(stopreason) {
   console.log("stopreason was: " + stopreason);
   if (stopreason === "arrived") {
       console.log("Bot finished moving to resource, starting to to dig it.");
@@ -38,7 +38,7 @@ function PickupMovementCallback(stopreason) { // provide a defualt callback
   }
 }
 
-function DiggingMovementCallback(stopreason) { // provide a defualt callback
+function DiggingMovementCallback(stopreason) {
   console.log("stopreason was: " + stopreason);
   if (stopreason === "arrived") {
       console.log("Bot finished moving to resource, starting to to dig it.");
@@ -51,7 +51,7 @@ gathering.PickupNearby = function () {
 };
 
 /* trees may be surrounded by leaves only one block above dirt, these need to be cleared
- before mining can commence */
+ before tree punching can commence */
 gathering.ClearLeaves = function () {
 
 };
@@ -177,15 +177,15 @@ gathering.Find = function (item_id) {
         console.log("I couldn't find any " + item_id);
     }
   });
+  attention.Return("gathering",gathering.Update);
 };
 
-function ItemSearchTick() {
+gathering.Update = function() {
   // if item que empty, don't bother
   if (item_que.length < 1) return;
 
-
-  setTimeout(ItemSearchTick, 5000); // search again every 5 seconds
-}
+  gathering.Find(item_que.first.id);
+};
 
 gathering.AddQue = function (item_id,item_amount) {
   // the defualt amound when not specified is one
