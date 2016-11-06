@@ -55,10 +55,6 @@ simple.ShowHealth = function() {
 // drop entire inventory contents
 simple.DropAll = function () {
 
-}
-
-simple.DigUntilBroken = function (enity_to_break) {
-  bot.dig(dirt_location, DiggingStopped );
-}
+};
 
 module.exports = simple;

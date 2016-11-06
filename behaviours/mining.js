@@ -23,4 +23,8 @@ mining.BuildStairs = function () {
 
 }
 
+mining.Mine = function () {
+  
+};
+
 module.exports = mining;

@@ -29,6 +29,7 @@ bot = mineflayer.createBot({
 var survival = require('./behaviours/survival.js');
 var trading = require('./behaviours/trading.js');
 var gathering = require('./behaviours/gathering.js');
+var mining = require('./behaviours/mining.js');
 var simple = require('./behaviours/simple.js');
 
 replSrv.context.bot = bot;
@@ -162,6 +163,9 @@ function ReceivedMessage (username, message) {
         break;
       case 'dig hole' === message:
         survival.DigHole();
+        break;
+      case 'mine' === message:
+        mining.Mine();
         break;
       case 'show inventory' === message:
         trading.showInventory();
