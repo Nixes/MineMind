@@ -35,6 +35,7 @@ var simple = require('./behaviours/simple.js');
 replSrv.context.bot = bot;
 replSrv.context.survival = survival;
 replSrv.context.gathering = gathering;
+replSrv.context.mining = mining;
 
 // enable mineflayer extensions
 navigatePlugin(bot);
