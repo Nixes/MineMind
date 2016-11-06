@@ -10,31 +10,32 @@ let current_level = 0;
 let number_branches = 0;
 let current_target;
 
-function onDiggingCompleted(err) {
+function onMineDiggingCompleted(err) {
   if(err) {
+    console.log("error while digging: ");
     console.log(err.stack);
     return;
   }
   console.log("finished digging " + current_target.name);
   mining.Mine();
-}
+};
 
 mining.BuildMineshaft = function (level) {
 
-}
+};
 
 mining.MineBranch = function () {
 
-}
+};
 
 mining.StartStripMine = function (level, number_branches) {
   mining.BuildMineshaft(level);
 
-}
+};
 
 mining.BuildStairs = function () {
 
-}
+};
 
 
 mining.SwitchToTool = function () {
@@ -44,14 +45,18 @@ mining.SwitchToTool = function () {
 
 
 mining.Mine = function () {
-  let block_underneath = bot.blockAt(bot.entity.position.plus(mineflayer.vec3(0, -1, 0) )); // the block underneath the bot
-  if(block_underneath.diggable === true) {
+  let block_underneath = bot.blockAt(bot.entity.position.offset(1, 0, 0)); // the block underneath the bot
+  if(block_underneath && bot.canDigBlock(block_underneath)) {
     current_target = block_underneath;
     console.log("Block underneath was dirt");
-    bot.dig(current_target, onDiggingCompleted);
+    bot.dig(current_target, onMineDiggingCompleted);
+  } else {
+    console.log("Unable to to dig block");
   }
+  /*
   console.log("Block Underneath was");
   console.log(block_underneath);
+  */
 };
 
 module.exports = mining;
