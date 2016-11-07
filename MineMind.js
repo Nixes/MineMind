@@ -52,10 +52,12 @@ bot.on("death",function () {
 });
 
 bot.on("diggingCompleted", function (error) {
-  bot.smartChat("diggingCompleted, error "+ error);
+  bot.smartChat("diggingCompleted, error: ");
+  console.log(error);
 });
 bot.on("diggingAborted", function (error) {
-  bot.smartChat("diggingAborted, error "+ error);
+  bot.smartChat("diggingAborted, error: ");
+  console.log(error);
 });
 
 bot.owner = program.owner;
@@ -170,9 +172,6 @@ function ReceivedMessage (username, message) {
       case 'gather wood' === message:
         gathering.Find(17);
         break;
-      /*case /^gather [a-z]+$/.test(message):
-        gathering.Find(1,command[2]);
-        break;*/
       case /^show trades [0-9]+$/.test(message):
         trading.showTrades(command[2]);
         break;
