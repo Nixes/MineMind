@@ -46,7 +46,7 @@ mining.SwitchToTool = function () {
 
 mining.Mine = function () {
   // make sure not already digging
-  //if (!bot.targetDigBlock) {
+  if (!bot.targetDigBlock) {
     let block_underneath = bot.blockAt(bot.entity.position.offset(0, -1, 0)); // the block underneath the bot
     if(block_underneath && bot.canDigBlock(block_underneath)) {
       current_target = block_underneath;
@@ -56,7 +56,9 @@ mining.Mine = function () {
     } else {
       console.log("Unable to to dig block");
     }
-  //}
+  } else {
+    console.log("Bot already digging");
+  }
 };
 
 module.exports = mining;
