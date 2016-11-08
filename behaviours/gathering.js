@@ -20,6 +20,17 @@ gathering.wood_blocks = new Array();
 // list of items to collect, each item consists of an [{id,amount}]
 gathering.item_que = new Array();
 
+// when digging complete
+function onDiggingCompleted(err) {
+  if(err) {
+    console.log(err.stack);
+    return;
+  }
+  console.log("finished digging " + tree_base.name);
+  // run the set return function
+  gathering.return_function();
+}
+
 // when the bot picks up an item, talk about it
 bot.on("playerCollect",function (collector, collected) {
   if (collector == bot.entity) {
@@ -138,14 +149,6 @@ gathering.GetWood = function(target_wood) {
   // bot.dig(current_target, onDiggingCompleted);
 };
 
-function onDiggingCompleted(err) {
-  if(err) {
-    console.log(err.stack);
-    return;
-  }
-  console.log("finished digging " + tree_base.name);
-}
-
 gathering.GetBlock = function() {
 
 };
@@ -176,8 +179,7 @@ gathering.Find = function (item_id) {
         console.log("I couldn't find any " + item_id);
     }
   });
-  // run the set return function
-  //gathering.return_function();
+
 };
 
 gathering.Update = function() {
