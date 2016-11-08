@@ -188,7 +188,7 @@ gathering.Update = function() {
 };
 
 gathering.AddQue = function (item_id,item_amount) {
-  // the defualt amound when not specified is one
+  // the default amount when not specified is one
   if (item_amount === undefined) {
       item_amount = 1;
   }
@@ -201,7 +201,7 @@ gathering.AddQue = function (item_id,item_amount) {
       return;
     }
   }
-  // if not add it to the que
+  // if not found add it to the que
   gathering.item_que.push({id:item_id, amount:item_amount}) ;
 };
 
