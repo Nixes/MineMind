@@ -176,14 +176,15 @@ gathering.Find = function (item_id) {
         console.log("I couldn't find any " + item_id);
     }
   });
-  attention.Return("gathering",gathering.Update);
+  // run the set return function
+  //gathering.return_function();
 };
 
 gathering.Update = function() {
   // if item que empty, don't bother
-  if (item_que.length < 1) return;
+  if (gathering.item_que.length < 1) return;
 
-  gathering.Find(item_que.first.id);
+  gathering.Find(gathering.item_que[0].id);
 };
 
 gathering.AddQue = function (item_id,item_amount) {
@@ -195,13 +196,14 @@ gathering.AddQue = function (item_id,item_amount) {
   // check to see if item is already in the list
   for (let item of gathering.item_que) {
     // if it is add the newly requested amount to the existing number
-    if (item.id == item_id) {
+    if (item.id === item_id) {
       item.amount += item_amount;
       return;
     }
   }
   // if not found add it to the que
-  gathering.item_que.push({id:item_id, amount:item_amount}) ;
+  gathering.item_que.push({id:item_id, amount:item_amount});
+  gathering.return_function();
 };
 
 
