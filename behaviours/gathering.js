@@ -6,18 +6,17 @@ this module will contain some techniques for gathering certain special materials
 */
 
 var mineflayer = require('mineflayer');
+var behaviour = require('./behaviour.js');
 
-function gathering () {
+// make it a subclass of behaviour
+gathering = Object.create(behaviour);
 
-}
-
+// private variables
 let max_search_distance = 30;
-
 let current_target;
 
 // the wood blocks of the tree being broken down
 gathering.wood_blocks = new Array();
-
 // list of items to collect, each item consists of an [{id,amount}]
 gathering.item_que = new Array();
 
