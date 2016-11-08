@@ -1,0 +1,28 @@
+{
+  "name": "minemind",
+  "version": "1.0.0",
+  "description": "a survival minecraft bot package just for fun",
+  "main": "MineMind.js",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "mineflayer": "../mineflayer",
+    "mineflayer-blockfinder": "^0.0.5",
+    "mineflayer-navigate": "^0.0.9",
+    "mineflayer-scaffold": "^0.0.5",
+    "repl": "^0.1.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nixes/MineMind.git"
+  },
+  "author": "Nixes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nixes/MineMind/issues"
+  },
+  "homepage": "https://github.com/Nixes/MineMind#readme"
+}
