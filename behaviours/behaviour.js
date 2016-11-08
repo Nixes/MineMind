@@ -1,18 +1,17 @@
-class behaviour {
-  constructor(name,module_ref,attention) {
-    this.name = name;
-    this.module = module_ref;
-    this.attention = attention;
-  }
-  disable() {
+function behaviour () {}
+  // public variables
+  behaviour.name = name;
+  behaviour.module;
+  behaviour.priority;
+
+behaviour.disable = function () {
     this.attention = 0;
-  }
-  increase() {
+};
+behaviour.increase = function() {
     this.attention++;
-  }
-  decrease() {
+};
+behaviour.decrease = function() {
     this.attention--;
-  }
-}
+};
 
 module.exports = behaviour;
