@@ -6,8 +6,8 @@ function simple () {
 
 }
 
+// public variables
 simple.following = false;
-
 simple.following_last_distance = 0;
 
 bot.on('entityGone', function onGone(entity) {
@@ -31,7 +31,7 @@ simple.UpdateFollow = function () {
       timeoutId = setTimeout(simple.UpdateFollow, 2000); // this keeps it following
     } else {
       bot.smartChat("Unable to follow, could not find owner, stopping");
-      simple.following === false;
+      simple.following = false;
     }
   }
 };
@@ -50,6 +50,15 @@ simple.Follow = function () {
 simple.ShowHealth = function() {
   bot.smartChat("Health: "+bot.health);
   bot.smartChat("Hunger: "+bot.food);
+};
+
+simple.ListInventory = function () {
+  let items = bot.inventory.items();
+  console.log("/* Inventory contents:");
+  for (let item of items) {
+    console.log( ' name: '+ item.name + ' type(id): '+ item.type + ' amount: ' + item.count);
+  }
+  console.log("*/ \n");
 };
 
 // drop entire inventory contents
