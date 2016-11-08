@@ -165,7 +165,11 @@ function ReceivedMessage (username, message) {
         break;
       case 'player visible' === message:
         let owner_entity = bot.getOwnerEntity();
-        console.log(bot.canSeeBlock(owner_entity));
+        if (bot.canSeeBlock(owner_entity)) {
+          bot.smartChat("Bot can see you");
+        } else {
+          bot.smartChat("Bot cannot see you");
+        }
         break;
       case 'show inventory' === message:
         trading.showInventory();
