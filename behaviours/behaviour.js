@@ -1,6 +1,6 @@
 function behaviour () {}
-  // public variables
-  behaviour.name = name;
+  // public variables, these should be moved into the constructor
+  behaviour.name;
   behaviour.module;
   behaviour.priority;
 
