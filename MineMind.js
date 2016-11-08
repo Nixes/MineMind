@@ -163,6 +163,10 @@ function ReceivedMessage (username, message) {
       case 'mine' === message:
         mining.Mine();
         break;
+      case 'player visible' === message:
+        let owner_entity = bot.getOwnerEntity();
+        console.log(bot.canSeeBlock(owner_entity));
+        break;
       case 'show inventory' === message:
         trading.showInventory();
         break;
