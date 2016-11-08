@@ -7,46 +7,41 @@ Bot attention system ideas:
 
 */
 
-class attention_submodule {
-  constructor(name,module_ref,attention) {
-    this.name = name;
-    this.module = module_ref;
-    this.attention = attention;
-  }
-  disable() {
-    this.attention = 0;
-  }
-  increase() {
-
-  }
-  decrease() {
-
-  }
-}
 
 function attention () {
-
+  console.log("Attention initialised");
 }
 
 /*
-  attention 0 is disabled
-  attention 1 is most important
-  attention >1 is less important
+  priority 0 is disabled
+  priority 1 is most important
+  priority >1 is less important
 */
 
-attention.submodules = {
-  survival:{module:survival,attention:0},
-  gathering:{module:gathering,attention:0},
-  mining:{module:mining,attention:0},
-};
+// this contains a list of module names and its intrinsic importance, higher in the list is more important
+// this is used for conflict resolution when two submodules have same internal priorities
+attention.conflict_priorities = [
+  "survival",
+  "crafting",
+  "gathering",
+  "mining"
+];
+
+attention.submodules = [];
+
+// this disables the automatic attention process
+attention.command_mode = false;
 
 
-attention.AddModule = function (name,module,starting_attention) {
+attention.AddModule = function (module) {
   attention.submodules.push( new attention_submodule(name,module,starting_attention) );
 };
 
 // this decides what module should recieve an update next
 attention.Update = function () {
+  for (let module of submodules) {
+    module.priority
+  }
 };
 
 // this is called externally by all modules that interact with this system, when they finish their current task
