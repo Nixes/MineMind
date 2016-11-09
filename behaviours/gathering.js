@@ -104,7 +104,7 @@ gathering.FindTreeBase = function (tree_bottom, tree_top) {
   }
 };
 
-gathering.GetWood = function(target_wood) {
+gathering.ScanTree = function(target_wood) {
   gathering.wood_blocks.length = 0; // clear array
   let tree_bottom = target_wood;
   let tree_top = target_wood;
@@ -147,6 +147,31 @@ gathering.GetWood = function(target_wood) {
   bot.moveToTarget(current_target,DiggingMovementCallback);
   // start digging after we get there
   // bot.dig(current_target, onDiggingCompleted);
+};
+
+// goes over each block of tree and removes anything that is no longer wood
+gathering.UpdateTree = function () {
+  // iterate in reverse so we can remove members
+  for (let i = wood_blocks.length - 1; i>=0; --i) {
+    let block = bot.blockAt(wood_blocks[i].position);
+    // if its not wood anymore
+    if (block.material !== "wood") {
+      // then remove it
+      wood_blocks.splice(i,1);
+      console.log("A non-wood block was found and removed");
+    }
+  }
+};
+
+gathering.GetWood = function (target_wood) {
+  // see if there is still a tree in progress
+  if (gathering.wood_blocks.length > 0) {
+    // if there is, keep working at it
+    gathering.UpdateTree();
+  } else {
+    // otherwise scan the tree and add to wood_blocks
+    gathering.ScanTree(target_wood);
+  }
 };
 
 gathering.GetBlock = function() {
