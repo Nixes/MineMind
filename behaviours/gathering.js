@@ -149,6 +149,10 @@ gathering.ScanTree = function(target_wood) {
   // bot.dig(current_target, onDiggingCompleted);
 };
 
+gathering.WorkOnTree = function () {
+
+};
+
 // goes over each block of tree and removes anything that is no longer wood
 gathering.UpdateTree = function () {
   // iterate in reverse so we can remove members
@@ -165,9 +169,11 @@ gathering.UpdateTree = function () {
 
 gathering.GetWood = function (target_wood) {
   // see if there is still a tree in progress
+  gathering.UpdateTree();
+
   if (gathering.wood_blocks.length > 0) {
     // if there is, keep working at it
-    gathering.UpdateTree();
+
   } else {
     // otherwise scan the tree and add to wood_blocks
     gathering.ScanTree(target_wood);
