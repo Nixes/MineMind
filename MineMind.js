@@ -32,7 +32,13 @@ var gathering = require('./behaviours/gathering.js');
 var mining = require('./behaviours/mining.js');
 var simple = require('./behaviours/simple.js');
 
+// for now lets just use a recursive return function
+gathering.setReturnFunction( gathering.Update );
+
+//var attention = require('./behaviours/attention.js');
+
 replSrv.context.bot = bot;
+replSrv.context.simple = simple;
 replSrv.context.survival = survival;
 replSrv.context.gathering = gathering;
 replSrv.context.mining = mining;
@@ -40,6 +46,7 @@ replSrv.context.mining = mining;
 // enable mineflayer extensions
 navigatePlugin(bot);
 blockfinderPlugin(bot);
+
 
 bot.on("login",function () {
   console.log("bot logged in");
