@@ -104,6 +104,12 @@ gathering.FindTreeBase = function (tree_bottom, tree_top) {
   }
 };
 
+// used to break down a specific block
+gathering.MoveAndBreak = function(target) {
+  current_target = target;
+  bot.moveToTarget(current_target,DiggingMovementCallback);
+};
+
 gathering.ScanTree = function(target_wood) {
   gathering.wood_blocks.length = 0; // clear array
   let tree_bottom = target_wood;
@@ -143,18 +149,21 @@ gathering.ScanTree = function(target_wood) {
   console.log("Bottom of tree: " + tree_bottom.position);
   console.log("Top of tree: " + tree_top.position);
   tree_base = gathering.FindTreeBase(tree_bottom,tree_top);
-  current_target = tree_base;
-  bot.moveToTarget(current_target,DiggingMovementCallback);
-  // start digging after we get there
-  // bot.dig(current_target, onDiggingCompleted);
+
+  gathering.MoveAndBreak(tree_base);
 };
 
+// this method decides what block of the tree to break next
 gathering.WorkOnTree = function () {
 
 };
 
+
+
 // goes over each block of tree and removes anything that is no longer wood
 gathering.UpdateTree = function () {
+  console.log("UpdateTree Ran");
+  console.log(" Length BEFORE: "+gathering.wood_blocks.length);
   // iterate in reverse so we can remove members
   for (let i = gathering.wood_blocks.length - 1; i>=0; --i) {
     let block = bot.blockAt(gathering.wood_blocks[i].position);
@@ -162,9 +171,10 @@ gathering.UpdateTree = function () {
     if (block.material !== "wood") {
       // then remove it
       gathering.wood_blocks.splice(i,1);
-      console.log("A non-wood block was found and removed");
+      console.log("  A non-wood block was found and removed");
     }
   }
+    console.log(" Length AFTER: "+gathering.wood_blocks.length);
 };
 
 gathering.GetWood = function (target_wood) {
@@ -173,7 +183,8 @@ gathering.GetWood = function (target_wood) {
 
   if (gathering.wood_blocks.length > 0) {
     // if there is, keep working at it
-
+    console.log("Found tree in progress, continuing...");
+    gathering.WorkOnTree();
   } else {
     // otherwise scan the tree and add to wood_blocks
     gathering.ScanTree(target_wood);
