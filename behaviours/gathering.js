@@ -156,12 +156,12 @@ gathering.WorkOnTree = function () {
 // goes over each block of tree and removes anything that is no longer wood
 gathering.UpdateTree = function () {
   // iterate in reverse so we can remove members
-  for (let i = wood_blocks.length - 1; i>=0; --i) {
-    let block = bot.blockAt(wood_blocks[i].position);
+  for (let i = gathering.wood_blocks.length - 1; i>=0; --i) {
+    let block = bot.blockAt(gathering.wood_blocks[i].position);
     // if its not wood anymore
     if (block.material !== "wood") {
       // then remove it
-      wood_blocks.splice(i,1);
+      gathering.wood_blocks.splice(i,1);
       console.log("A non-wood block was found and removed");
     }
   }
