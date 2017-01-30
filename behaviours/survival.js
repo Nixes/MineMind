@@ -11,6 +11,7 @@ that will protect the bot from dying every few minutes
 */
 
 var mineflayer = require('mineflayer');
+var vec3 = require('vec3');
 
 let dirt_like = [
   3, // dirt
@@ -67,7 +68,7 @@ survival.PickBestWeapon = function () {
 
 survival.AttackTarget = function (target) {
   if (target !== null) {
-    bot.lookAt(target.position.plus(mineflayer.vec3(0, 1.62 + 0.5, 0)), true); // look where we are swinging
+    bot.lookAt(target.position.plus(vec3(0, 1.62 + 0.5, 0)), true); // look where we are swinging
     //bot.moveToTarget(enemy); // move towards the enemy before attacking
     bot.attack(target);
   }
@@ -76,7 +77,7 @@ survival.AttackTarget = function (target) {
 survival.RunAttackTarget = function (target) {
   if (target !== null) {
     bot.moveToTarget(target); // move towards the enemy before attacking
-    bot.lookAt(target.position.plus(mineflayer.vec3(0, 1.62 + 0.5, 0)), true); // look where we are swinging
+    bot.lookAt(target.position.plus(vec3(0, 1.62 + 0.5, 0)), true); // look where we are swinging
     bot.attack(target);
   }
 };

@@ -5,9 +5,9 @@
   "main": "MineMind.js",
   "dependencies": {
     "commander": "^2.9.0",
-    "mineflayer": "../mineflayer",
-    "mineflayer-blockfinder": "^0.0.5",
-    "mineflayer-navigate": "^0.0.9",
+    "mineflayer": "^2.0.0",
+    "mineflayer-blockfinder": "git://github.com/Darthfett/mineflayer-blockfinder#66b1c510cb839c4d435624117be8e39ff37687ba",
+    "mineflayer-navigate": "git://github.com/andrewrk/mineflayer-navigate.git#90fbc04d7d214d8a7f8f154ee9b999aa076471df",
     "mineflayer-scaffold": "^0.0.5",
     "repl": "^0.1.3"
   },

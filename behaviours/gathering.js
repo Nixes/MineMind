@@ -7,6 +7,7 @@ this module will contain some techniques for gathering certain special materials
 
 var mineflayer = require('mineflayer');
 var behaviour = require('./behaviour.js');
+var vec3 = require('vec3');
 
 // make it a subclass of behaviour
 gathering = Object.create(behaviour);
@@ -70,14 +71,14 @@ gathering.ClearLeaves = function () {
 gathering.SeachAdjacentFlat = function (block_search_around,block_id_search) {
   if (block_search_around === null || block_id_search === null) return;
   let blocks_seach = new Array(8);
-  blocks_seach[0] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(1, 0, 0) )); // front
-  blocks_seach[1] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(-1, 0, 0) )); // behind
-  blocks_seach[2] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(0, 0, 1) )); // left
-  blocks_seach[3] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(0, 0, -1) )); // right
-  blocks_seach[4] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(1, 0, 1) )); // left front
-  blocks_seach[5] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(1, 0, -1) )); // right front
-  blocks_seach[6] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(-1, 0, 1) )); // left behind
-  blocks_seach[7] = bot.blockAt(block_search_around.position.plus(mineflayer.vec3(-1, 0, -1) )); // right behind
+  blocks_seach[0] = bot.blockAt(block_search_around.position.plus(vec3(1, 0, 0) )); // front
+  blocks_seach[1] = bot.blockAt(block_search_around.position.plus(vec3(-1, 0, 0) )); // behind
+  blocks_seach[2] = bot.blockAt(block_search_around.position.plus(vec3(0, 0, 1) )); // left
+  blocks_seach[3] = bot.blockAt(block_search_around.position.plus(vec3(0, 0, -1) )); // right
+  blocks_seach[4] = bot.blockAt(block_search_around.position.plus(vec3(1, 0, 1) )); // left front
+  blocks_seach[5] = bot.blockAt(block_search_around.position.plus(vec3(1, 0, -1) )); // right front
+  blocks_seach[6] = bot.blockAt(block_search_around.position.plus(vec3(-1, 0, 1) )); // left behind
+  blocks_seach[7] = bot.blockAt(block_search_around.position.plus(vec3(-1, 0, -1) )); // right behind
 
   for (let block of blocks_seach) {
     if (block.type === block_id_search) {
@@ -94,7 +95,7 @@ gathering.FindTreeBase = function (tree_bottom, tree_top) {
   let tree_length = (tree_top.position.y - tree_bottom.position.y) + 1; // the tree count should include the original wood block;
   console.log("Tree length was: " + tree_length);
   for (let i = 0; i < tree_length; i++) {
-    let block_search_around = bot.blockAt( tree_bottom.position.plus(mineflayer.vec3(0, i, 0)) );
+    let block_search_around = bot.blockAt( tree_bottom.position.plus(vec3(0, i, 0)) );
     if (gathering.SeachAdjacentFlat(block_search_around,0) ) {
       return block_search_around;
     } else {
@@ -117,10 +118,10 @@ gathering.ScanTree = function(target_wood) {
 
 
   // find how deep the tree goes
-  let pos_to_test = target_wood.position.plus(mineflayer.vec3(0, -1, 0));
+  let pos_to_test = target_wood.position.plus(vec3(0, -1, 0));
   let is_block_below = true;
   while (is_block_below) {
-    pos_to_test = pos_to_test.plus(mineflayer.vec3(0, -1, 0));
+    pos_to_test = pos_to_test.plus(vec3(0, -1, 0));
     let block_below = bot.blockAt(pos_to_test);
     if (block_below !== null && block_below.material === 'wood') {
       console.log("Found wood block below target");
@@ -132,10 +133,10 @@ gathering.ScanTree = function(target_wood) {
   }
   gathering.wood_blocks.push(target_wood);
   // find out how high the tree goes
-  pos_to_test = target_wood.position.plus(mineflayer.vec3(0, -1, 0));
+  pos_to_test = target_wood.position.plus(vec3(0, -1, 0));
   let is_block_above = true;
   while (is_block_above) {
-    pos_to_test = pos_to_test.plus(mineflayer.vec3(0, 1, 0));
+    pos_to_test = pos_to_test.plus(vec3(0, 1, 0));
     let block_above = bot.blockAt(pos_to_test);
     if (block_above !== null && block_above.material === 'wood') {
       console.log("Found wood block above target");

@@ -7,7 +7,7 @@ var mcdata = require('minecraft-data')(mineflayer.version);
 // more bot smarts
 var blockfinderPlugin = require('mineflayer-blockfinder')(mineflayer);
 var navigatePlugin = require('mineflayer-navigate')(mineflayer);
-var scaffoldPlugin = require('mineflayer-scaffold')(mineflayer);
+//var scaffoldPlugin = require('mineflayer-scaffold')(mineflayer);
 
 program
   .option('-h, --host [host]', 'specifiy server ip, default: localhost')

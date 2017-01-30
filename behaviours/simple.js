@@ -22,7 +22,7 @@ simple.UpdateFollow = function () {
     let owner_entity = bot.getOwnerEntity();
     if (owner_entity !== null) {
       bot.moveToTarget(owner_entity);
-      bot.lookAt(owner_entity.position.plus(mineflayer.vec3(0, 1.62, 0)), true);
+      bot.lookAt(owner_entity.position.plus(vec3(0, 1.62, 0)), true);
       let distance = Math.round( bot.entity.position.distanceTo(owner_entity.position) );
       if (distance != simple.following_last_distance) { // don't talk about current distance if it hasn't changed
         bot.smartChat(distance+" blocks from owner");
@@ -55,6 +55,7 @@ simple.ShowHealth = function() {
 simple.ListInventory = function () {
   let items = bot.inventory.items();
   console.log("/* Inventory contents:");
+
   for (let item of items) {
     console.log( ' name: '+ item.name + ' type(id): '+ item.type + ' amount: ' + item.count);
   }
