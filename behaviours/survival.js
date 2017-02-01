@@ -12,6 +12,8 @@ that will protect the bot from dying every few minutes
 
 var mineflayer = require('mineflayer');
 var vec3 = require('vec3');
+var attention = require('./attention.js');
+var behaviour = require('./behaviour.js');
 
 let dirt_like = [
   3, // dirt
@@ -24,17 +26,15 @@ let distance_close = 16; // the range at which awareness of enemies should impro
 let distance_danger = 5; // the range at which the bot should attack mobs
 
 
-function survival() {
+// make it a subclass of behaviour
+survival = Object.create(behaviour);
 
-}
-
-survival.danger_level = 0;
 /*
-levels and meaning:
- 1 - Just took damage but environment safe
- 2 - Entered dark cave
- 3 - Night time
-
+Priority levels and meanings:
+ 1 - Only constant dangers (food levels)
+ 2 - Just took damage but environment safe
+ 3 - Entered dark cave
+ 4 - Night time
 */
 
 function DiggingStopped(error) {
@@ -69,14 +69,14 @@ survival.PickBestWeapon = function () {
 survival.AttackTarget = function (target) {
   if (target !== null) {
     bot.lookAt(target.position.plus(vec3(0, 1.62 + 0.5, 0)), true); // look where we are swinging
-    //bot.moveToTarget(enemy); // move towards the enemy before attacking
+    //attention.moveToTarget(enemy); // move towards the enemy before attacking
     bot.attack(target);
   }
 };
 
 survival.RunAttackTarget = function (target) {
   if (target !== null) {
-    bot.moveToTarget(target); // move towards the enemy before attacking
+    attention.moveToTarget(target); // move towards the enemy before attacking
     bot.lookAt(target.position.plus(vec3(0, 1.62 + 0.5, 0)), true); // look where we are swinging
     bot.attack(target);
   }
@@ -90,10 +90,13 @@ survival.ChooseTarget = function (targets) {
   let closest_target = bot.findClosestTarget(targets);
   console.log("Chosen target");
   console.log(closest_target);
-  if (closest_target.name === 'Skeleton' || closest_target.name === 'Witch' ) {
-    survival.RunAttackTarget(closest_target);
-  } else {
-    survival.AttackTarget(closest_target);
+  // check to see if this behaviour is allowed to perform movement
+  if (!attention.movement_reserved) {
+    if (closest_target.name === 'Skeleton' || closest_target.name === 'Witch' ) {
+      survival.RunAttackTarget(closest_target);
+    } else {
+      survival.AttackTarget(closest_target);
+    }
   }
 };
 
@@ -122,13 +125,14 @@ survival.SearchEnemies = function () {
       // if close enemies found then keep searching
       setTimeout(survival.CheckDanger, 300);
     } else {
-      setTimeout(survival.CheckDanger, 5000); // search again in 5 seconds
+      // otherwise return back to attention system
+      survival.return_function();
     }
 };
 
 survival.CheckDanger = function() {
-  if( survival.IsNight() && survival.danger_level < 3 ) {
-      survival.danger_level = 3;
+  if( survival.IsNight()) {
+      survival.setPriorityIfGreater(3);
   }
   survival.SearchEnemies();
 };
@@ -144,10 +148,13 @@ survival.DigHole = function() {
   console.log(dirt_location);
 
   if (dirt_location !== null) {
-    bot.moveToTarget(dirt_location);
-
+    attention.moveToTarget(dirt_location);
   }
 
+};
+
+survival.Update = function () {
+  survival.CheckDanger();
 };
 
 module.exports = survival;
