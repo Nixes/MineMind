@@ -87,16 +87,29 @@ survival.RunAttackTarget = function (target) {
 survival.ChooseTarget = function (targets) {
   //console.log("Targets ("+targets.length+"):");
   //console.log(targets);
-  let closest_target = bot.findClosestTarget(targets);
+
+  // remove targets that are not visible from assesment
+  let visible_targets = [];
+  for (let i = 0; i < targets.length;i++) {
+    if (bot.canSeeBlock(targets[i])) {
+      visible_targets.push(targets[i]);
+    }
+  }
+  // find the closest one to attack
+  let closest_target = bot.findClosestTarget(visible_targets);
+
+  // check that we actually found a target
+  if (!closest_target) return;
+
   //console.log("Chosen target");
   //console.log(closest_target);
   // check to see if this behaviour is allowed to perform movement
-  if (!attention.movement_reserved) {
-    if (closest_target.name === 'Skeleton' || closest_target.name === 'Witch' ) {
+  if (closest_target.name === 'Skeleton' || closest_target.name === 'Witch' ) {
+    if (!attention.movement_reserved) {
       survival.RunAttackTarget(closest_target);
-    } else {
-      survival.AttackTarget(closest_target);
     }
+  } else {
+    survival.AttackTarget(closest_target);
   }
 };
 
