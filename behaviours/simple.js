@@ -1,6 +1,7 @@
 // these are simmple commands that interface with the bot api directly
 
 var mineflayer = require('mineflayer');
+var vec3 = require('vec3');
 
 function simple () {
 
