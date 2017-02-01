@@ -1,24 +1,24 @@
 function behaviour () {
+  // public variables
+  this.priority = 1;
+  this.return_function = null;
+  this.last_run = null; // Date
 }
 
 // NOTE: All Behaviours must supply their own Update() method and must return to return_function() when they are finished
 
-// public variables, these should be moved into the constructor
-behaviour.priority = 1;
-behaviour.return_function;
-
-behaviour.setReturnFunction = function (return_function) {
+behaviour.prototype.setReturnFunction = function (return_function) {
   this.return_function = return_function;
 };
 
-behaviour.setPriority = function (priority) {
+behaviour.prototype.setPriority = function (priority) {
   if (priority > 0) {
     this.priority = priority;
   } else {
     console.log("Something tried to set priority to a negative number");
   }
 };
-behaviour.setPriorityIfGreater = function (priority) {
+behaviour.prototype.setPriorityIfGreater = function (priority) {
   if (priority > this.priority) {
     this.priority = priority;
   } else {
@@ -26,13 +26,13 @@ behaviour.setPriorityIfGreater = function (priority) {
   }
 };
 
-behaviour.disable = function () {
+behaviour.prototype.disable = function () {
   this.priority = 0;
 };
-behaviour.increase = function() {
+behaviour.prototype.increase = function() {
   this.priority++;
 };
-behaviour.decrease = function() {
+behaviour.prototype.decrease = function() {
   // a priority should never be a negative number
   if (this.priority !== 0) {
     this.priority--;
