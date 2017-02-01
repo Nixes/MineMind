@@ -35,7 +35,7 @@ Priority levels and meanings:
  4 - Night time
 */
 
-survival.danger_enemies = null;
+survival.danger_enemies = [];
 
 function DiggingStopped(error) {
   bot.smartChat("Digging interupted: "+error);

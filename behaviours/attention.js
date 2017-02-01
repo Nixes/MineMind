@@ -6,6 +6,7 @@ Bot attention system ideas:
 
 
 */
+var vec3 = require('vec3');
 
 // hardcoded values for danger radius
 let distance_close = 16; // the range at which awareness of enemies should improve
@@ -69,8 +70,32 @@ attention.moveToTarget = function (targetEntity,callback) {
     }
 };
 
+function RemoveEntity(changed_entity, list_entities) {
+  for(let i=0;i < list_entities.length; i++) {
+    if (list_entities[i].id === changed_entity.id) {
+      list_entities.splice(i, 1); // remove 1 element from position i
+    }
+  }
+}
+
+function AddOrUpdateEntity(changed_entity, list_entities) {
+  // if no list then just add it
+  if (!list_entities) list_entities.push(changed_entity);
+
+  for (let entity of list_entities) {
+    if (entity.id === changed_entity.id) {
+      entity = changed_entity;
+      return; // success so return early
+    }
+  }
+  // if not found by this point just add it
+  list_entities.push(changed_entity);
+}
+
 // this function check the updated entity to see if it is of interest to the bot
-attention.ObserveEntity = function (updated_entity) {
+attention.CheckEntity = function (updated_entity) {
+  console.time("check_entity");
+
   // check to see if the bot was close enough to be interesting
   if (bot.entity.position.distanceTo(updated_entity.position) < distance_close) {
 
@@ -78,17 +103,26 @@ attention.ObserveEntity = function (updated_entity) {
     if (updated_entity.kind === 'Hostile mobs') {
 
       // then check to see if its going to be a threat
-      if (bot.entity.position.distanceTo(e.position) < distance_danger || e.name === 'Skeleton' || e.name === 'Witch') {
+      if (bot.entity.position.distanceTo(updated_entity.position) < distance_danger || updated_entity.name === 'Skeleton' || updated_entity.name === 'Witch') {
         // search to see if it needs adding to dangerous targets
+        AddOrUpdateEntity(updated_entity,attention.behaviours.survival.danger_enemies);
       }
     }
 
   } else {
-    // search to see if it needs removal
+    // make sure the list exists first
+    if (attention.behaviours.survival.danger_enemies) {
+      // search to see if it needs removal
+      if (!(bot.entity.position.distanceTo(updated_entity.position) < distance_danger || updated_entity.name === 'Skeleton' || updated_entity.name === 'Witch') ) {
+        // remove it from the list
+        RemoveEntity(updated_entity,attention.behaviours.survival.danger_enemies)
+      }
+    }
   }
+  console.timeEnd("check_entity");
 };
 
-// search for nearby entities, this runs on every update, TODO: optimise to allow
+// search for nearby entities, this runs on every update
 attention.CheckEntities = function () {
   console.time("entities_search");
 
@@ -120,6 +154,14 @@ attention.CheckEntities = function () {
   attention.behaviours.survival.danger_enemies = danger_enemies;
   //setTimeout(attention.CheckEntities, entity_update_interval);
 
+  // make it so the bot always looks at the closest target
+  {
+    let closest_target = bot.findClosestTarget(close_entities);
+    if (closest_target) {
+      bot.lookAt(closest_target.position.plus(vec3(0, 1.62, 0)));
+    }
+  }
+
   console.timeEnd("entities_search");
 };
 
@@ -147,7 +189,7 @@ attention.Update = function () {
 
   // run the task
   attention.behaviours[highest_priority_task_name].Update();
-  setTimeout(attention.Return, 100);
+  setTimeout(attention.Return, 50);
 };
 
 // this is called externally by all modules that interact with this system, when they finish their current task

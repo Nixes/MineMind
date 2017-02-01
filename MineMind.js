@@ -53,8 +53,12 @@ bot.on("login",function () {
 bot.on("kicked",function (reason, loggedIn) {
   console.log("bot kicked for: "+reason);
 });
+bot.on("actionBar",function (message) {
+  console.log("actionBar: "+message);
+});
 bot.on("entityUpdate",function (entity) {
-  attention.CheckEntities(entity); // run after each update
+  //attention.CheckEntities(entity); // run after each update
+  attention.CheckEntity(entity); // run after each update
   //console.log(entity);
   //console.log("entity: "+entity.displayName);
 });
@@ -101,10 +105,12 @@ bot.findClosestTarget = function(targets) {
   let closest_target = null;
   let shortest_distance = 100;
   for(let target of targets) {
-    let distance = bot.entity.position.distanceTo(target.position);
-    if (distance < shortest_distance) {
-      shortest_distance = distance;
-      closest_target = target;
+    if (target !== bot.entity) { // this makes sure to remove bots own entity from consideration
+      let distance = bot.entity.position.distanceTo(target.position);
+      if (distance < shortest_distance) {
+        shortest_distance = distance;
+        closest_target = target;
+      }
     }
   }
   return closest_target;
