@@ -46,6 +46,21 @@ blockfinderPlugin(bot);
 
 let spawn_time = null;
 
+let last_death_cause = null;
+
+let death_logs = [];
+
+function ProcessDeathMessage(message) {
+  if (message.translate.substring(0,5) !== "death") {console.log("was not a death message"); return null;}
+
+  console.log("was a death message");
+  let death_reason = "killed with: " + message.translate;
+  if (message.with[1]) {
+    death_reason = death_reason +" by: "+ message.with[1].text;
+  }
+  return death_reason;
+}
+
 bot.on("login",function () {
   console.log("bot logged in");
   attention.Update();
@@ -56,10 +71,11 @@ bot.on("kicked",function (reason, loggedIn) {
 bot.on("actionBar",function (message) {
   console.log("actionBar: "+message);
 });
+bot.on("message",function (message) {
+  last_death_cause = ProcessDeathMessage(message);
+});
 bot.on("entityUpdate",function (entity) {
-  //attention.CheckEntities(entity); // run after each update
   attention.CheckEntity(entity); // run after each update
-  //console.log(entity);
   //console.log("entity: "+entity.displayName);
 });
 
@@ -71,6 +87,7 @@ bot.on("death",function () {
   console.log("bot was killed");
   let current_date = new Date();
   let survived_seconds = (current_date - spawn_time) / 1000;
+  death_logs.push( {last_death_cause,survived_seconds} );
   console.log("Survived seconds: ");
   console.log(survived_seconds);
 });
@@ -81,6 +98,12 @@ bot.on("diggingCompleted", function (error) {
 bot.on("diggingAborted", function (error) {
   bot.smartChat("diggingAborted, error: ");
   console.log(error);
+});
+process.on('SIGINT', function() {
+  console.log("Exiting...");
+  console.log(death_logs);
+  bot.quit();
+  process.exit();
 });
 
 bot.owner = program.owner;
