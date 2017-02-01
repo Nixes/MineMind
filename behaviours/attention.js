@@ -42,11 +42,13 @@ attention.movement_reserved = false;
 attention.moveToTarget = function (targetEntity,callback) {
     if (targetEntity === null) return;
 
+
     var path = bot.navigate.findPathSync(targetEntity.position, {
         timeout: 1000,
         endRadius: 2,
     });
     if (callback === undefined) {
+        if (attention.movement_reserved) { return;}
         callback = function() { // provide a defualt callback
             if (targetEntity !== null) {
                 console.log("Finished moving");
@@ -55,8 +57,13 @@ attention.moveToTarget = function (targetEntity,callback) {
             attention.movement_reserved = false;
         };
     }
+    if (attention.movement_reserved) { callback();}
     attention.movement_reserved = true;
-    bot.navigate.walk(path.path, callback);
+    var tmp_callback = function () {
+      attention.movement_reserved = false;
+      callback();
+    };
+    bot.navigate.walk(path.path, tmp_callback);
     if (path.status !== 'success') {
       console.log("Pathing failed because: "+ path.status);
     }
