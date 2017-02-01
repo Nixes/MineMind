@@ -26,18 +26,15 @@ bot = mineflayer.createBot({
 });
 
 // behaviours
+var attention = require('./behaviours/attention.js');
 var survival = require('./behaviours/survival.js');
 var trading = require('./behaviours/trading.js');
 var gathering = require('./behaviours/gathering.js');
 var mining = require('./behaviours/mining.js');
 var simple = require('./behaviours/simple.js');
 
-// for now lets just use a recursive return function
-gathering.setReturnFunction( gathering.Update );
-
-//var attention = require('./behaviours/attention.js');
-
 replSrv.context.bot = bot;
+replSrv.context.attention = attention;
 replSrv.context.simple = simple;
 replSrv.context.survival = survival;
 replSrv.context.gathering = gathering;
@@ -47,17 +44,32 @@ replSrv.context.mining = mining;
 navigatePlugin(bot);
 blockfinderPlugin(bot);
 
+let spawn_time = null;
 
 bot.on("login",function () {
   console.log("bot logged in");
+  attention.Update();
 });
 bot.on("kicked",function (reason, loggedIn) {
   console.log("bot kicked for: "+reason);
 });
-bot.on("death",function () {
-  console.log("bot was killed");
+bot.on("entityUpdate",function (entity) {
+  attention.CheckEntities(entity); // run after each update
+  //console.log(entity);
+  //console.log("entity: "+entity.displayName);
 });
 
+bot.on("spawn",function () {
+  spawn_time = new Date();
+  console.log("bot spawned");
+});
+bot.on("death",function () {
+  console.log("bot was killed");
+  let current_date = new Date();
+  let survived_seconds = (current_date - spawn_time) / 1000;
+  console.log("Survived seconds: ");
+  console.log(survived_seconds);
+});
 bot.on("diggingCompleted", function (error) {
   bot.smartChat("diggingCompleted, error: ");
   console.log(error);
@@ -69,11 +81,6 @@ bot.on("diggingAborted", function (error) {
 
 bot.owner = program.owner;
 
-bot.getOwnerEntity = function () {
-  let owner = bot.players[bot.owner];
-  return owner.entity;
-};
-
 bot.smartChat = function (message) {
   if (bot.owner) {
     bot.whisper(bot.owner,message);
@@ -82,6 +89,13 @@ bot.smartChat = function (message) {
   }
   console.log("Chat: "+ message);
 };
+
+bot.getOwnerEntity = function () {
+  if (!bot.owner) {bot.smartChat("Bot has no owner, cannot obtain entity.");}
+  let owner = bot.players[bot.owner];
+  return owner.entity;
+};
+
 
 bot.findClosestTarget = function(targets) {
   let closest_target = null;
@@ -94,32 +108,6 @@ bot.findClosestTarget = function(targets) {
     }
   }
   return closest_target;
-};
-
-bot.moveToTarget = function (targetEntity,callback) {
-    if (targetEntity === null) return;
-
-    var path = bot.navigate.findPathSync(targetEntity.position, {
-        timeout: 1000,
-        endRadius: 2,
-    });
-    if (callback === undefined) {
-        callback = function() { // provide a defualt callback
-            if (targetEntity !== null) {
-                //console.log("Finished moving");
-            }
-        };
-    }
-    bot.navigate.walk(path.path, callback);
-    if (path.status !== 'success') {
-      console.log("Pathing failed because: "+ path.status);
-    }
-};
-
-// this function tries to determine if an object is visible to the bot
-// use some sort of raymarching alg
-bot.testVisible = function (entity) {
-
 };
 
 bot.echo = false;
@@ -196,3 +184,11 @@ function ReceivedMessage (username, message) {
 bot.on('whisper',ReceivedMessage );
 bot.on('chat',ReceivedMessage );
 exports.bot = bot;
+
+
+//gathering.setReturnFunction( gathering.Update ); // for now lets just use a recursive return function
+// register behaviours to the attention system
+attention.AddBehaviour("survival",survival);
+attention.AddBehaviour("gathering",gathering);
+
+// attention.Update() is run on successfull login
