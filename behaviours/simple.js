@@ -1,5 +1,5 @@
 // these are simmple commands that interface with the bot api directly
-
+var attention = require('./attention.js');
 var mineflayer = require('mineflayer');
 var vec3 = require('vec3');
 
@@ -22,7 +22,7 @@ simple.UpdateFollow = function () {
   if (simple.following === true) {
     let owner_entity = bot.getOwnerEntity();
     if (owner_entity !== null) {
-      bot.moveToTarget(owner_entity);
+      attention.moveToTarget(owner_entity);
       bot.lookAt(owner_entity.position.plus(vec3(0, 1.62, 0)), true);
       let distance = Math.round( bot.entity.position.distanceTo(owner_entity.position) );
       if (distance != simple.following_last_distance) { // don't talk about current distance if it hasn't changed
