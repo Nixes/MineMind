@@ -22,12 +22,10 @@ let dirt_like = [
 ];
 
 
-let distance_close = 16; // the range at which awareness of enemies should improve
-let distance_danger = 5; // the range at which the bot should attack mobs
 
 
 // make it a subclass of behaviour
-survival = Object.create(behaviour);
+survival = new behaviour();
 
 /*
 Priority levels and meanings:
@@ -36,6 +34,8 @@ Priority levels and meanings:
  3 - Entered dark cave
  4 - Night time
 */
+
+survival.danger_enemies = null;
 
 function DiggingStopped(error) {
   bot.smartChat("Digging interupted: "+error);
@@ -85,11 +85,11 @@ survival.RunAttackTarget = function (target) {
 // this when given a list of enemys, will choose the best one to focus on.
 // currently just attacks the closest
 survival.ChooseTarget = function (targets) {
-  console.log("Targets ("+targets.length+"):");
-  console.log(targets);
+  //console.log("Targets ("+targets.length+"):");
+  //console.log(targets);
   let closest_target = bot.findClosestTarget(targets);
-  console.log("Chosen target");
-  console.log(closest_target);
+  //console.log("Chosen target");
+  //console.log(closest_target);
   // check to see if this behaviour is allowed to perform movement
   if (!attention.movement_reserved) {
     if (closest_target.name === 'Skeleton' || closest_target.name === 'Witch' ) {
@@ -100,41 +100,10 @@ survival.ChooseTarget = function (targets) {
   }
 };
 
-survival.SearchEnemies = function () {
-  console.log("Searching for enemies");
-  let close_enemies = Object.keys(bot.entities).map(function (id) {
-    return bot.entities[id];
-  }).filter(function (e) {
-    return e.kind === 'Hostile mobs' && bot.entity.position.distanceTo(e.position) < distance_close;
-  });
-
-  let danger_enemies = close_enemies.filter(function (e) {
-      // add to danger list if normal mob and very close or close and skeleton
-      return bot.entity.position.distanceTo(e.position) < distance_danger || e.name === 'Skeleton' || e.name === 'Witch';
-  });
-
-  console.log('  found ' + close_enemies.length + ' close enemies');
-  console.log('  found ' + danger_enemies.length + ' dangerously close enemies');
-  //bot.smartChat(close_enemies_ids.join(', '));
-  //console.log(close_enemies);
-    if (danger_enemies.length > 0) {
-      console.log("Dangerously close enemies found, attacking.");
-      survival.ChooseTarget(danger_enemies);
-    }
-    if (close_enemies.length > 0) {
-      // if close enemies found then keep searching
-      setTimeout(survival.CheckDanger, 300);
-    } else {
-      // otherwise return back to attention system
-      survival.return_function();
-    }
-};
-
 survival.CheckDanger = function() {
   if( survival.IsNight()) {
-      survival.setPriorityIfGreater(3);
+      //survival.setPriorityIfGreater(3);
   }
-  survival.SearchEnemies();
 };
 
 survival.DigHole = function() {
@@ -155,6 +124,12 @@ survival.DigHole = function() {
 
 survival.Update = function () {
   survival.CheckDanger();
+  if (survival.danger_enemies && survival.danger_enemies.length > 0) {
+    //console.log("Enemies listed, finding target");
+    survival.ChooseTarget(survival.danger_enemies);
+  } else {
+    //console.log("No targets");
+  }
 };
 
 module.exports = survival;
