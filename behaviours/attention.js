@@ -10,7 +10,7 @@ var vec3 = require('vec3');
 
 // hardcoded values for danger radius
 let distance_close = 16; // the range at which awareness of enemies should improve
-let distance_danger = 5; // the range at which the bot should attack mobs
+let distance_danger = 6; // the range at which the bot should attack mobs
 
 
 function attention () {
@@ -74,6 +74,7 @@ function RemoveEntity(changed_entity, list_entities) {
   for(let i=0;i < list_entities.length; i++) {
     if (list_entities[i].id === changed_entity.id) {
       list_entities.splice(i, 1); // remove 1 element from position i
+      return; // success so return early
     }
   }
 }
@@ -82,9 +83,9 @@ function AddOrUpdateEntity(changed_entity, list_entities) {
   // if no list then just add it
   if (!list_entities) list_entities.push(changed_entity);
 
-  for (let entity of list_entities) {
-    if (entity.id === changed_entity.id) {
-      entity = changed_entity;
+  for (var i = 0; i < list_entities.length; i++) {
+    if (list_entities[i].id === changed_entity.id) {
+      list_entities[i] = changed_entity;
       return; // success so return early
     }
   }
