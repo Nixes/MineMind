@@ -67,19 +67,19 @@ survival.PickBestWeapon = function () {
 };
 
 survival.AttackTarget = function (target) {
-  if (target !== null) {
-    bot.lookAt(target.position.plus(vec3(0, 1.62 + 0.5, 0)), true); // look where we are swinging
-    //attention.moveToTarget(enemy); // move towards the enemy before attacking
-    bot.attack(target);
-  }
+  if (!target) { return; }
+
+  bot.lookAt(target.position.plus(vec3(0, 1.62 + 0.5, 0)), true); // look where we are swinging
+  //attention.moveToTarget(enemy); // move towards the enemy before attacking
+  bot.attack(target);
 };
 
 survival.RunAttackTarget = function (target) {
-  if (target !== null) {
-    attention.moveToTarget(target); // move towards the enemy before attacking
-    bot.lookAt(target.position.plus(vec3(0, 1.62 + 0.5, 0)), true); // look where we are swinging
-    bot.attack(target);
-  }
+  if (!target) { return; }
+
+  attention.moveToTarget(target); // move towards the enemy before attacking
+  bot.lookAt(target.position.plus(vec3(0, 1.62 + 0.5, 0)), true); // look where we are swinging
+  bot.attack(target);
 };
 
 // this when given a list of enemys, will choose the best one to focus on.
