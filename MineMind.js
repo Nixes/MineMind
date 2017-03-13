@@ -51,9 +51,8 @@ let last_death_cause = null;
 let death_logs = [];
 
 function ProcessDeathMessage(message) {
-  if (message.translate.substring(0,5) !== "death") {console.log("was not a death message"); return null;}
+  if (message.translate.substring(0,5) !== "death") { return null;}
 
-  console.log("was a death message");
   let death_reason = "killed with: " + message.translate;
   if (message.with[1]) {
     death_reason = death_reason +" by: "+ message.with[1].text;

@@ -10,7 +10,7 @@ var behaviour = require('./behaviour.js');
 var vec3 = require('vec3');
 
 // make it a subclass of behaviour
-gathering = Object.create(behaviour);
+gathering = new behaviour();
 
 // private variables
 let max_search_distance = 30;
