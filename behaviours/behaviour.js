@@ -1,6 +1,7 @@
 function behaviour () {
   // public variables
   this.priority = 1;
+  this.enabled = false;
   this.return_function = null;
   this.last_run = null; // Date
 }
