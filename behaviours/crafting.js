@@ -1,8 +1,8 @@
 function crafting () {}
 
-crafting.GetTable() {
+crafting.prototype.GetTable = function () {
   gathering.Find(1,'Wood');
-}
+};
 
 
 module.exports = crafting;
