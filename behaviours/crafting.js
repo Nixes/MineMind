@@ -103,6 +103,10 @@ crafting.HaveCraftingTable = function () {
   return false;
 }
 
+crafting.prototype.GetTable = function () {
+  gathering.Find(1,'Wood');
+};
+
 /**
  * CraftItem - description
  *
