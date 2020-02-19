@@ -18,8 +18,40 @@ let current_target;
 
 // the wood blocks of the tree being broken down
 gathering.wood_blocks = new Array();
+
 // list of items to collect, each item consists of an [{id,amount}]
 gathering.item_que = new Array();
+
+function findQue(item_id) {
+  for (let i=0; i < gathering.item_que.length;i++) {
+    if (gathering.item_que[i].id === item_id) {
+      return i;
+    }
+  }
+  return null;
+}
+
+// checks to see if items in the que are fulfilled by items in the inventory
+function updateQue() {
+  console.log("Inventory contained: ");
+  console.log(bot.inventory);
+
+  for(let slot of bot.inventory.slots) {
+    if (slot !== null) {
+      console.log("Slot: ");
+      console.log(slot);
+      let que_index = findQue(slot.type);
+      if (que_index !== null) {
+        // we found a match, so we need to see if we have enough to remove the item from the que
+        let que_item = gathering.item_que[que_index];
+        if (que_item.amount <= que_item.count) {
+          console.log("Que item fufilled removing");
+          gathering.item_que.splice(que_index,1);
+        }
+      }
+    }
+  }
+}
 
 // when digging complete
 function onDiggingCompleted(err) {
@@ -37,7 +69,8 @@ bot.on("playerCollect",function (collector, collected) {
   if (collector == bot.entity) {
     console.log("The bot picked up an item, it was: ");
     console.log(collected);
-    // check if item was in the item que,
+    // check if item was in the item que
+    updateQue();
   }
 });
 
@@ -239,13 +272,11 @@ gathering.AddQue = function (item_id,item_amount) {
   }
 
   // check to see if item is already in the list
-  for (let item of gathering.item_que) {
-    // if it is add the newly requested amount to the existing number
-    if (item.id === item_id) {
-      item.amount += item_amount;
-      return;
-    }
+  var match = findQue(item_id);
+  if (match !== null) {
+    item.amount += item_amount;
   }
+
   // if not found add it to the que
   gathering.item_que.push({id:item_id, amount:item_amount});
   gathering.return_function();

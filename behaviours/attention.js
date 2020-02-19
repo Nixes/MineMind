@@ -95,7 +95,7 @@ function AddOrUpdateEntity(changed_entity, list_entities) {
 
 // this function check the updated entity to see if it is of interest to the bot
 attention.CheckEntity = function (updated_entity) {
-  console.time("check_entity");
+  //console.time("check_entity");
 
   // check to see if the bot was close enough to be interesting
   if (bot.entity.position.distanceTo(updated_entity.position) < distance_close) {
@@ -120,7 +120,7 @@ attention.CheckEntity = function (updated_entity) {
       }
     }
   }
-  console.timeEnd("check_entity");
+  //console.timeEnd("check_entity");
 };
 
 // search for nearby entities, this runs on every update
@@ -181,15 +181,22 @@ attention.Update = function () {
 
   // find the task with the highest priority
   for (let behaviour in attention.behaviours) {
-    if (attention.behaviours[behaviour].priority > highest_priority_value) {
-      highest_priority_value = attention.behaviours[behaviour].priority;
-      highest_priority_task_name = behaviour;
+    // check that behaviour is enabled
+    if (attention.behaviours[behaviour].enabled != false) {
+      if (attention.behaviours[behaviour].priority > highest_priority_value) {
+        highest_priority_value = attention.behaviours[behaviour].priority;
+        highest_priority_task_name = behaviour;
+      }
     }
   }
   //console.log("Highest priority task was: " + highest_priority_task_name + " with: " + highest_priority_value);
 
   // run the task
-  attention.behaviours[highest_priority_task_name].Update();
+  if (highest_priority_task_name !== "") {
+    attention.behaviours[highest_priority_task_name].Update();
+  } else {
+    console.log("Error no task found.");
+  }
   setTimeout(attention.Return, 50);
 };
 

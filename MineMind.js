@@ -28,6 +28,7 @@ bot = mineflayer.createBot({
 // behaviours
 var attention = require('./behaviours/attention.js');
 var survival = require('./behaviours/survival.js');
+var crafting = require('./behaviours/crafting.js');
 var trading = require('./behaviours/trading.js');
 var gathering = require('./behaviours/gathering.js');
 var mining = require('./behaviours/mining.js');
@@ -197,8 +198,14 @@ function ReceivedMessage (username, message) {
       case 'show inventory' === message:
         trading.showInventory();
         break;
-      case 'gather wood' === message:
-        gathering.Find(17);
+      case /^gather [0-9]+$/.test(message):
+        let item_id = parseInt(command[1]);
+        console.log("Gathering item: "+item_id);
+        gathering.Find(item_id);
+        break;
+      case /^craft [0-9]+$/.test(message):
+        let integer = parseInt(command[1]);
+        crafting.CraftItem(integer);
         break;
       case /^show trades [0-9]+$/.test(message):
         trading.showTrades(command[2]);
@@ -213,10 +220,13 @@ bot.on('whisper',ReceivedMessage );
 bot.on('chat',ReceivedMessage );
 exports.bot = bot;
 
+// enable gathering and crafting behaviours
+gathering.enabled = true;
 
 //gathering.setReturnFunction( gathering.Update ); // for now lets just use a recursive return function
 // register behaviours to the attention system
 attention.AddBehaviour("survival",survival);
 attention.AddBehaviour("gathering",gathering);
+attention.AddBehaviour("crafting",crafting);
 
 // attention.Update() is run on successfull login
