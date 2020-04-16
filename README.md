@@ -1,7 +1,9 @@
+Mostly abandoned, while javascript somehow has the best Minecraft bot API of all languages (Mineflayer FTW!), actually building anything large in it gets old fast, typescript would help, but mineflayer does not yet have typings. Also an event based interface like provided by Mineflayer just doesn't seem really suited to AI development.
+
 # MineMind
 a minecraft bot for fun
 
-##Usage
+## Usage
 ```
 -h, --host [host]', specifiy server ip, default: localhost
 -p, --port [port]', specifiy server port, default: 25565
@@ -16,13 +18,13 @@ General Todo List:
 - [ ] Robust stair building
 
 
-#Modules
+# Modules
 
-##Attention
+## Attention
 Decides which of goals most needs attention (an update tick)
 
-##Mining
+## Mining
 Stores current mining operation state and manages mining operations.
 
-##Survival
+## Survival
 Mostly concerned with self preservation, attacks enemies that get too close, manages food consumption.
